@@ -1,0 +1,2858 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0">
+    <title>CSU Lal-lo — Esports Tournament Hub</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Black+Ops+One&family=Orbitron:wght@400;700;900&family=Chakra+Petch:wght@400;500;600;700&family=Rajdhani:wght@400;500;600;700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-deep: #080810;
+            --bg-surface: #10101c;
+            --bg-card: #181828;
+            --bg-elevated: #222238;
+            --ink-primary: #f0f0ff;
+            --ink-secondary: #a8a8c8;
+            --ink-muted: #707090;
+            --accent: #6b5ce7;
+            --accent-dim: #4a3db0;
+            --accent-bright: #9d8fff;
+            --accent-gold: #d4af37;
+            --accent-gold-dim: #8a7020;
+            --accent-cyan: #00d4ff;
+            --accent-cyan-dim: #0088aa;
+            --accent-red: #e04040;
+            --accent-red-dim: #802020;
+            --accent-olive: #6b8e23;
+            --accent-olive-bright: #9acd32;
+            --accent-olive-dim: #3a5220;
+            --accent-amber: #ff8c00;
+            --accent-amber-dim: #b36200;
+            --accent-tan: #c2b280;
+            --line: rgba(255, 255, 255, 0.08);
+            --line-bright: rgba(107, 92, 231, 0.3);
+            --shadow: 0 4px 24px rgba(0, 0, 0, 0.5);
+            --glow: 0 0 20px rgba(107, 92, 231, 0.2);
+            --radius: 8px;
+            --radius-lg: 16px;
+            --step-0: clamp(0.8rem, 0.75rem + 0.25vw, 1rem);
+            --step-1: clamp(0.95rem, 0.85rem + 0.5vw, 1.25rem);
+            --step-2: clamp(1.1rem, 0.95rem + 0.75vw, 1.75rem);
+            --step-3: clamp(1.4rem, 1.1rem + 1.5vw, 2.5rem);
+            --step-4: clamp(1.8rem, 1.3rem + 2.5vw, 4rem);
+            --space: clamp(0.75rem, 0.6rem + 0.75vw, 1.5rem);
+        }
+
+        body.high-contrast {
+            --bg-deep: #000;
+            --bg-surface: #111;
+            --bg-card: #1a1a1a;
+            --bg-elevated: #222;
+            --ink-primary: #fff;
+            --ink-secondary: #ccc;
+            --ink-muted: #999;
+            --accent: #ff0;
+            --accent-dim: #cc0;
+            --accent-bright: #ff6;
+            --accent-gold: #ff0;
+            --accent-cyan: #0ff;
+            --accent-red: #f44;
+            --accent-olive: #0f0;
+            --accent-amber: #fa0;
+            --line: rgba(255,255,255,0.2);
+            --line-bright: rgba(255,255,0,0.5);
+        }
+
+        body.high-contrast .match,
+        body.high-contrast .guideline-card,
+        body.high-contrast .mode-card,
+        body.high-contrast .bracket-label-box,
+        body.high-contrast .champion-card,
+        body.high-contrast .game-card,
+        body.high-contrast .rules-toggle-bar {
+            border-width: 2px !important;
+        }
+
+        body.high-contrast .team {
+            border: 1px solid rgba(255,255,255,0.15);
+        }
+
+        body.large-text { --step-0: clamp(1rem, 0.9rem + 0.5vw, 1.25rem); }
+        body.large-text { --step-1: clamp(1.15rem, 1rem + 0.75vw, 1.5rem); }
+        body.large-text { --step-2: clamp(1.3rem, 1.1rem + 1vw, 2rem); }
+        body.large-text { --step-3: clamp(1.6rem, 1.25rem + 1.75vw, 2.75rem); }
+        body.large-text { --step-4: clamp(2rem, 1.5rem + 2.5vw, 4.5rem); }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        html {
+            scroll-behavior: smooth;
+            -webkit-text-size-adjust: 100%;
+        }
+
+        body {
+            background: var(--bg-deep);
+            color: var(--ink-primary);
+            font-family: "Inter", "Hiragino Sans", "Yu Gothic", "Noto Sans JP", sans-serif;
+            font-size: var(--step-0);
+            line-height: 1.6;
+            min-height: 100vh;
+            overflow-x: hidden;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+            transition: background 0.3s, color 0.3s;
+        }
+
+        body::before {
+            content: "";
+            position: fixed;
+            inset: 0;
+            background-image:
+                linear-gradient(rgba(107, 92, 231, 0.03) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(107, 92, 231, 0.03) 1px, transparent 1px);
+            background-size: 60px 60px;
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        /* ===== ACCESSIBILITY BAR ===== */
+        .accessibility-bar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 1000;
+            background: rgba(8, 8, 16, 0.95);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border-bottom: 1px solid var(--line);
+            padding: 0.5em var(--space);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 0.75em;
+            flex-wrap: wrap;
+        }
+
+        body.high-contrast .accessibility-bar {
+            background: #000;
+            border-bottom: 2px solid #ff0;
+        }
+
+        .accessibility-bar .bar-left {
+            display: flex;
+            align-items: center;
+            gap: 0.75em;
+            flex-wrap: wrap;
+        }
+
+        .accessibility-bar .bar-label {
+            font-family: "Rajdhani", sans-serif;
+            font-weight: 700;
+            font-size: 0.75rem;
+            color: var(--ink-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            display: flex;
+            align-items: center;
+            gap: 0.35em;
+        }
+
+        .accessibility-bar .bar-label svg {
+            width: 16px;
+            height: 16px;
+            fill: currentColor;
+        }
+
+        .a11y-btn {
+            font-family: "Rajdhani", sans-serif;
+            font-weight: 700;
+            font-size: 0.75rem;
+            letter-spacing: 0.05em;
+            text-transform: uppercase;
+            color: var(--ink-secondary);
+            background: var(--bg-card);
+            border: 1px solid var(--line);
+            border-radius: 6px;
+            padding: 0.4em 0.8em;
+            cursor: pointer;
+            transition: all 0.2s;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.35em;
+            white-space: nowrap;
+        }
+
+        .a11y-btn:hover, .a11y-btn:focus-visible {
+            background: var(--bg-elevated);
+            border-color: var(--accent);
+            color: var(--accent-bright);
+            outline: none;
+            box-shadow: 0 0 0 2px rgba(107, 92, 231, 0.2);
+        }
+
+        .a11y-btn.active {
+            background: var(--accent-dim);
+            border-color: var(--accent);
+            color: var(--accent-bright);
+            box-shadow: 0 0 10px rgba(107, 92, 231, 0.2);
+        }
+
+        body.high-contrast .a11y-btn.active {
+            background: #ff0;
+            color: #000;
+            border-color: #ff0;
+        }
+
+        .a11y-btn svg {
+            width: 14px;
+            height: 14px;
+            fill: currentColor;
+        }
+
+        .register-btn {
+            font-family: "Orbitron", "Chakra Petch", sans-serif;
+            font-weight: 700;
+            font-size: 0.8rem;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            color: var(--bg-deep);
+            background: linear-gradient(135deg, var(--accent-gold), var(--accent-amber));
+            border: none;
+            border-radius: 6px;
+            padding: 0.55em 1.2em;
+            cursor: pointer;
+            transition: all 0.2s;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.4em;
+            white-space: nowrap;
+            box-shadow: 0 0 15px rgba(212, 175, 55, 0.25);
+        }
+
+        .register-btn:hover, .register-btn:focus-visible {
+            transform: translateY(-1px);
+            box-shadow: 0 4px 20px rgba(212, 175, 55, 0.4);
+            outline: none;
+        }
+
+        .register-btn svg {
+            width: 16px;
+            height: 16px;
+            fill: currentColor;
+        }
+
+        .skip-link {
+            position: absolute;
+            top: -40px;
+            left: 0;
+            background: var(--accent);
+            color: #fff;
+            padding: 8px 16px;
+            z-index: 1001;
+            text-decoration: none;
+            font-family: "Rajdhani", sans-serif;
+            font-weight: 700;
+            font-size: 0.85rem;
+            border-radius: 0 0 4px 0;
+            transition: top 0.2s;
+        }
+
+        .skip-link:focus {
+            top: 0;
+        }
+
+        /* ===== HEADER ===== */
+        header {
+            position: relative;
+            z-index: 1;
+            background: linear-gradient(180deg, rgba(16,16,28,0.98) 0%, rgba(8,8,16,0.99) 100%);
+            border-bottom: 1px solid var(--line-bright);
+            padding: calc(var(--space) * 4) var(--space) calc(var(--space) * 1.5);
+            text-align: center;
+            overflow: hidden;
+            margin-top: 40px;
+        }
+
+        header::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 70%;
+            height: 2px;
+            background: linear-gradient(90deg, transparent, var(--accent-gold), var(--accent), var(--accent-gold), transparent);
+            opacity: 0.6;
+        }
+
+        .header-badge {
+            display: inline-block;
+            font-family: "Rajdhani", sans-serif;
+            font-weight: 700;
+            font-size: var(--step-0);
+            letter-spacing: 0.2em;
+            text-transform: uppercase;
+            color: var(--accent-bright);
+            border: 1px solid var(--accent-dim);
+            padding: 0.35em 1.2em;
+            border-radius: 100px;
+            margin-bottom: var(--space);
+            background: rgba(107, 92, 231, 0.06);
+        }
+
+        h1 {
+            font-family: "Orbitron", sans-serif;
+            font-weight: 900;
+            font-size: var(--step-4);
+            letter-spacing: 0.03em;
+            text-transform: uppercase;
+            line-height: 1.1;
+            background: linear-gradient(135deg, var(--ink-primary) 0%, var(--accent-gold) 50%, var(--accent-bright) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 0.3em;
+            word-break: break-word;
+        }
+
+        .subtitle {
+            font-family: "Rajdhani", sans-serif;
+            font-weight: 600;
+            font-size: var(--step-2);
+            color: var(--accent-gold);
+            letter-spacing: 0.12em;
+            text-transform: uppercase;
+        }
+
+        .tournament-meta {
+            display: flex;
+            justify-content: center;
+            gap: calc(var(--space) * 2);
+            margin-top: calc(var(--space) * 1.5);
+            flex-wrap: wrap;
+        }
+
+        .meta-item {
+            font-family: "Rajdhani", sans-serif;
+            font-weight: 600;
+            font-size: var(--step-0);
+            color: var(--ink-secondary);
+            display: flex;
+            align-items: center;
+            gap: 0.4em;
+        }
+
+        .meta-item::before {
+            content: "◆";
+            color: var(--accent-gold);
+            font-size: 0.65em;
+        }
+
+        /* ===== GAME SELECTOR ===== */
+        .game-selector {
+            position: relative;
+            z-index: 1;
+            max-width: 900px;
+            margin: 0 auto;
+            padding: calc(var(--space) * 2) var(--space);
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: calc(var(--space) * 1.25);
+        }
+
+        .game-card {
+            background: var(--bg-surface);
+            border: 1px solid var(--line);
+            border-radius: var(--radius-lg);
+            padding: calc(var(--space) * 1.5);
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .game-card::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+
+        .game-card.mlbb::before { background: linear-gradient(90deg, var(--accent-cyan), var(--accent-gold)); }
+        .game-card.codm::before { background: linear-gradient(90deg, var(--accent-olive), var(--accent-amber)); }
+
+        .game-card:hover, .game-card:focus-visible {
+            transform: translateY(-4px);
+            box-shadow: var(--shadow);
+            border-color: var(--line-bright);
+            outline: none;
+        }
+
+        .game-card:hover::before, .game-card:focus-visible::before {
+            opacity: 1;
+        }
+
+        .game-card.active {
+            border-color: var(--accent);
+            box-shadow: var(--glow);
+        }
+
+        .game-card.active::before {
+            opacity: 1;
+        }
+
+        .game-card.mlbb.active { border-color: var(--accent-cyan); box-shadow: 0 0 20px rgba(0, 212, 255, 0.15); }
+        .game-card.codm.active { border-color: var(--accent-olive); box-shadow: 0 0 20px rgba(107, 142, 35, 0.15); }
+
+        .game-icon {
+            font-size: 3rem;
+            line-height: 1;
+            margin-bottom: 0.35em;
+        }
+
+        .game-card h3 {
+            font-family: "Orbitron", "Black Ops One", sans-serif;
+            font-weight: 700;
+            font-size: var(--step-2);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            margin-bottom: 0.3em;
+        }
+
+        .game-card.mlbb h3 {
+            background: linear-gradient(135deg, var(--accent-cyan), var(--accent-gold));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .game-card.codm h3 {
+            background: linear-gradient(135deg, var(--accent-olive-bright), var(--accent-amber));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .game-card p {
+            color: var(--ink-secondary);
+            font-size: 0.9em;
+            line-height: 1.5;
+        }
+
+        .game-card .game-meta {
+            display: flex;
+            justify-content: center;
+            gap: 1em;
+            margin-top: 0.75em;
+            flex-wrap: wrap;
+        }
+
+        .game-card .game-meta span {
+            font-family: "Rajdhani", sans-serif;
+            font-weight: 600;
+            font-size: 0.75rem;
+            color: var(--ink-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+        }
+
+        /* ===== TOURNAMENT SECTIONS ===== */
+        .tournament-section {
+            display: none;
+            position: relative;
+            z-index: 1;
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 var(--space) calc(var(--space) * 2);
+            animation: fadeIn 0.4s ease;
+        }
+
+        .tournament-section.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* ===== SECTION HEADER ===== */
+        .section-header {
+            display: flex;
+            align-items: center;
+            gap: calc(var(--space) * 0.75);
+            margin-bottom: calc(var(--space) * 1.25);
+            padding-bottom: var(--space);
+            border-bottom: 1px solid var(--line);
+            flex-wrap: wrap;
+        }
+
+        .section-header h2 {
+            font-family: "Orbitron", "Black Ops One", sans-serif;
+            font-weight: 700;
+            font-size: var(--step-3);
+            letter-spacing: 0.04em;
+            text-transform: uppercase;
+            white-space: nowrap;
+            line-height: 1.2;
+        }
+
+        .mlbb-section .section-header h2 {
+            background: linear-gradient(135deg, var(--accent-cyan), var(--accent-gold));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .codm-section .section-header h2 {
+            background: linear-gradient(135deg, var(--accent-olive-bright), var(--accent-amber));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .section-line {
+            flex: 1;
+            height: 1px;
+            background: linear-gradient(90deg, var(--line-bright), transparent);
+            min-width: 40px;
+        }
+
+        .format-badge {
+            font-family: "Rajdhani", "Chakra Petch", sans-serif;
+            font-weight: 700;
+            font-size: var(--step-0);
+            color: var(--bg-deep);
+            padding: 0.35em 1em;
+            border-radius: 4px;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            white-space: nowrap;
+            flex-shrink: 0;
+        }
+
+        .mlbb-section .format-badge { background: var(--accent-gold); }
+        .codm-section .format-badge { background: var(--accent-olive); }
+
+        /* ===== RULES TOGGLE BAR (CODM) ===== */
+        .rules-toggle-bar {
+            background: var(--bg-card);
+            border: 1px solid var(--line);
+            border-radius: var(--radius-lg);
+            padding: calc(var(--space) * 0.875) calc(var(--space) * 1.1);
+            margin-bottom: calc(var(--space) * 1.5);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: var(--space);
+            flex-wrap: wrap;
+        }
+
+        .rules-toggle-bar .toggle-info {
+            display: flex;
+            align-items: center;
+            gap: 0.6em;
+            font-family: "Rajdhani", sans-serif;
+            font-weight: 600;
+            color: var(--ink-secondary);
+            font-size: 0.9em;
+        }
+
+        .rules-toggle-bar .toggle-info svg {
+            width: 18px;
+            height: 18px;
+            fill: var(--accent-amber);
+            flex-shrink: 0;
+        }
+
+        .rules-toggle-bar .toggle-info .current-rules-label {
+            color: var(--accent-olive-bright);
+            font-weight: 700;
+        }
+
+        .rules-toggle-bar .toggle-buttons {
+            display: flex;
+            gap: 0.5em;
+            flex-wrap: wrap;
+        }
+
+        .rules-toggle-btn {
+            font-family: "Chakra Petch", "Rajdhani", sans-serif;
+            font-weight: 700;
+            font-size: 0.8rem;
+            letter-spacing: 0.05em;
+            text-transform: uppercase;
+            color: var(--ink-secondary);
+            background: var(--bg-elevated);
+            border: 1px solid var(--line);
+            border-radius: 6px;
+            padding: 0.5em 1em;
+            cursor: pointer;
+            transition: all 0.2s;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.4em;
+            white-space: nowrap;
+        }
+
+        .rules-toggle-btn:hover, .rules-toggle-btn:focus-visible {
+            border-color: var(--accent-olive);
+            color: var(--accent-olive-bright);
+            outline: none;
+        }
+
+        .rules-toggle-btn.active {
+            background: var(--accent-olive-dim);
+            border-color: var(--accent-olive);
+            color: var(--accent-olive-bright);
+            box-shadow: 0 0 10px rgba(107, 142, 35, 0.15);
+        }
+
+        .rules-toggle-btn .dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: currentColor;
+            opacity: 0.5;
+        }
+
+        .rules-toggle-btn.active .dot {
+            opacity: 1;
+            box-shadow: 0 0 6px currentColor;
+        }
+
+        .rules-panel {
+            display: none;
+            animation: fadeIn 0.35s ease;
+        }
+
+        .rules-panel.active {
+            display: block;
+        }
+
+        /* Diff badges */
+        .diff-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.3em;
+            font-family: "Chakra Petch", sans-serif;
+            font-size: 0.65rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            padding: 0.15em 0.5em;
+            border-radius: 3px;
+            margin-left: 0.5em;
+            vertical-align: middle;
+        }
+
+        .diff-badge.changed {
+            background: rgba(255, 140, 0, 0.12);
+            color: var(--accent-amber);
+            border: 1px solid rgba(255, 140, 0, 0.25);
+        }
+
+        .diff-badge.added {
+            background: rgba(107, 142, 35, 0.15);
+            color: var(--accent-olive-bright);
+            border: 1px solid rgba(107, 142, 35, 0.25);
+        }
+
+        .diff-badge.removed {
+            background: rgba(224, 64, 64, 0.1);
+            color: var(--accent-red);
+            border: 1px solid rgba(224, 64, 64, 0.2);
+        }
+
+        .diff-legend {
+            display: flex;
+            gap: 0.75em;
+            flex-wrap: wrap;
+            margin-bottom: calc(var(--space) * 1);
+            padding: 0.6em 0.875em;
+            background: rgba(0,0,0,0.15);
+            border: 1px solid var(--line);
+            border-radius: var(--radius);
+        }
+
+        .diff-legend span {
+            font-family: "Chakra Petch", sans-serif;
+            font-size: 0.75rem;
+            color: var(--ink-muted);
+            display: flex;
+            align-items: center;
+            gap: 0.35em;
+        }
+
+        .diff-legend .dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 2px;
+            display: inline-block;
+        }
+
+        .dot.changed { background: var(--accent-amber); }
+        .dot.added { background: var(--accent-olive-bright); }
+        .dot.removed { background: var(--accent-red); }
+
+        /* ===== BRACKET ===== */
+        .bracket-wrapper {
+            background: var(--bg-surface);
+            border: 1px solid var(--line);
+            border-radius: var(--radius-lg);
+            padding: calc(var(--space) * 1.25);
+            overflow-x: auto;
+            -webkit-overflow-scrolling: touch;
+            scrollbar-width: thin;
+            scrollbar-color: var(--accent-dim) var(--bg-deep);
+        }
+
+        .bracket-wrapper::-webkit-scrollbar {
+            height: 6px;
+        }
+        .bracket-wrapper::-webkit-scrollbar-track {
+            background: var(--bg-deep);
+            border-radius: 3px;
+        }
+        .bracket-wrapper::-webkit-scrollbar-thumb {
+            background: var(--accent-dim);
+            border-radius: 3px;
+        }
+
+        .bracket-desktop {
+            display: grid;
+            grid-template-columns: repeat(5, minmax(170px, 1fr));
+            gap: calc(var(--space) * 0.6);
+            min-width: 850px;
+        }
+
+        .bracket-mobile {
+            display: none;
+        }
+
+        .bracket-col {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            gap: calc(var(--space) * 0.4);
+        }
+
+        .col-label {
+            font-family: "Rajdhani", "Chakra Petch", sans-serif;
+            font-weight: 700;
+            font-size: var(--step-0);
+            text-align: center;
+            text-transform: uppercase;
+            letter-spacing: 0.12em;
+            margin-bottom: calc(var(--space) * 0.75);
+            padding: 0.5em 0.3em;
+            border-bottom: 2px solid;
+        }
+
+        .mlbb-section .col-label {
+            color: var(--accent-cyan);
+            border-color: var(--accent-cyan-dim);
+        }
+
+        .codm-section .col-label {
+            color: var(--accent-amber);
+            border-color: var(--accent-amber-dim);
+        }
+
+        .match {
+            background: var(--bg-card);
+            border: 1px solid var(--line);
+            border-radius: var(--radius);
+            overflow: hidden;
+            position: relative;
+            transition: transform 0.2s, box-shadow 0.2s;
+            flex: 1;
+            min-width: 0;
+        }
+
+        .match:hover, .match:active {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow);
+            border-color: var(--line-bright);
+        }
+
+        .match-header {
+            font-family: "Rajdhani", "Chakra Petch", sans-serif;
+            font-weight: 700;
+            font-size: 0.7rem;
+            letter-spacing: 0.12em;
+            text-transform: uppercase;
+            padding: 0.4em 0.75em;
+            border-bottom: 1px solid var(--line);
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .mlbb-section .match-header {
+            background: linear-gradient(90deg, var(--accent-gold-dim), transparent);
+            color: var(--accent-gold-bright);
+        }
+
+        .mlbb-section .match-header.cyan {
+            background: linear-gradient(90deg, var(--accent-cyan-dim), transparent);
+            color: var(--accent-cyan);
+        }
+
+        .mlbb-section .match-header.red,
+        .codm-section .match-header.red {
+            background: linear-gradient(90deg, var(--accent-red-dim), transparent);
+            color: var(--accent-red);
+        }
+
+        .codm-section .match-header {
+            background: linear-gradient(90deg, var(--accent-olive-dim), transparent);
+            color: var(--accent-olive-bright);
+        }
+
+        .codm-section .match-header.amber {
+            background: linear-gradient(90deg, var(--accent-amber-dim), transparent);
+            color: var(--accent-amber);
+        }
+
+        .match-body {
+            padding: 0.4em;
+        }
+
+        .team {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0.5em 0.6em;
+            margin-bottom: 0.25em;
+            background: var(--bg-elevated);
+            border-radius: 4px;
+            font-family: "Rajdhani", sans-serif;
+            font-weight: 600;
+            font-size: var(--step-0);
+            border-left: 3px solid transparent;
+            transition: all 0.2s;
+            gap: 0.5em;
+            min-height: 36px;
+        }
+
+        .team:last-child {
+            margin-bottom: 0;
+        }
+
+        .team.winner {
+            border-left-color: var(--accent-gold);
+            background: linear-gradient(90deg, rgba(212,175,55,0.08), var(--bg-elevated));
+        }
+
+        .codm-section .team.winner {
+            border-left-color: var(--accent-olive);
+            background: linear-gradient(90deg, rgba(107,142,35,0.08), var(--bg-elevated));
+        }
+
+        .team.loser {
+            border-left-color: var(--accent-red);
+            opacity: 0.7;
+        }
+
+        .team-name {
+            color: var(--ink-primary);
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            min-width: 0;
+        }
+
+        .team-label {
+            font-family: "Orbitron", "Chakra Petch", sans-serif;
+            font-size: 0.6rem;
+            font-weight: 700;
+            padding: 0.2em 0.5em;
+            border-radius: 3px;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            flex-shrink: 0;
+        }
+
+        .team-label.win {
+            background: rgba(212, 175, 55, 0.15);
+            color: var(--accent-gold);
+        }
+
+        .codm-section .team-label.win {
+            background: rgba(107, 142, 35, 0.2);
+            color: var(--accent-olive-bright);
+        }
+
+        .team-label.loss {
+            background: rgba(224, 64, 64, 0.15);
+            color: var(--accent-red);
+        }
+
+        .match-format {
+            text-align: center;
+            font-family: "Rajdhani", "Chakra Petch", sans-serif;
+            font-weight: 600;
+            font-size: 0.65rem;
+            color: var(--ink-muted);
+            padding: 0.35em;
+            border-top: 1px solid var(--line);
+            margin-top: 0.2em;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .championship-col {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            gap: var(--space);
+        }
+
+        .championship-title {
+            font-family: "Orbitron", "Black Ops One", sans-serif;
+            font-weight: 900;
+            font-size: var(--step-1);
+            text-transform: uppercase;
+            letter-spacing: 0.12em;
+            writing-mode: vertical-rl;
+            text-orientation: mixed;
+            padding: 1em 0.5em;
+            border: 2px solid;
+            border-radius: var(--radius);
+        }
+
+        .mlbb-section .championship-title {
+            color: var(--accent-gold);
+            border-color: var(--accent-gold-dim);
+            background: linear-gradient(180deg, rgba(212,175,55,0.08), transparent);
+        }
+
+        .codm-section .championship-title {
+            color: var(--accent-amber);
+            border-color: var(--accent-amber-dim);
+            background: linear-gradient(180deg, rgba(255,140,0,0.08), transparent);
+        }
+
+        .champion-card {
+            border-radius: var(--radius);
+            padding: 1em 1.5em;
+            text-align: center;
+            width: 100%;
+            max-width: 220px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .mlbb-section .champion-card {
+            background: linear-gradient(135deg, var(--accent-gold-dim), var(--accent-gold));
+            box-shadow: 0 0 20px rgba(212, 175, 55, 0.25);
+        }
+
+        .codm-section .champion-card {
+            background: linear-gradient(135deg, var(--accent-olive-dim), var(--accent-olive));
+            box-shadow: 0 0 20px rgba(107, 142, 35, 0.25);
+        }
+
+        .codm-section .champion-card::before {
+            content: "";
+            position: absolute;
+            inset: 0;
+            background: repeating-linear-gradient(45deg, transparent, transparent 10px, rgba(0,0,0,0.05) 10px, rgba(0,0,0,0.05) 20px);
+            pointer-events: none;
+        }
+
+        .champion-card .team-name {
+            font-family: "Orbitron", "Black Ops One", sans-serif;
+            font-weight: 900;
+            font-size: var(--step-2);
+            color: var(--bg-deep);
+            text-transform: uppercase;
+            letter-spacing: 0.06em;
+            word-break: break-word;
+            position: relative;
+            z-index: 1;
+        }
+
+        .champion-label {
+            font-family: "Rajdhani", "Chakra Petch", sans-serif;
+            font-weight: 700;
+            font-size: var(--step-0);
+            color: var(--bg-deep);
+            opacity: 0.85;
+            text-transform: uppercase;
+            letter-spacing: 0.15em;
+            position: relative;
+            z-index: 1;
+        }
+
+        .trophy {
+            font-size: 2.5rem;
+            line-height: 1;
+            margin-bottom: 0.25em;
+            position: relative;
+            z-index: 1;
+        }
+
+        .bracket-labels {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: var(--space);
+            margin-top: calc(var(--space) * 1.25);
+        }
+
+        .bracket-label-box {
+            background: var(--bg-card);
+            border: 1px solid var(--line);
+            border-radius: var(--radius);
+            padding: calc(var(--space) * 0.875);
+            text-align: center;
+        }
+
+        .bracket-label-box h3 {
+            font-family: "Rajdhani", "Chakra Petch", sans-serif;
+            font-weight: 700;
+            font-size: var(--step-1);
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            margin-bottom: 0.4em;
+        }
+
+        .mlbb-section .bracket-label-box.upper h3 { color: var(--accent-cyan); }
+        .mlbb-section .bracket-label-box.lower h3 { color: var(--accent-red); }
+        .codm-section .bracket-label-box.upper h3 { color: var(--accent-olive-bright); }
+        .codm-section .bracket-label-box.lower h3 { color: var(--accent-red); }
+
+        .bracket-label-box.upper { border-color: rgba(0, 212, 255, 0.15); }
+        .bracket-label-box.lower { border-color: rgba(224, 64, 64, 0.15); }
+        .codm-section .bracket-label-box.upper { border-color: rgba(107, 142, 35, 0.2); }
+
+        .bracket-label-box p {
+            color: var(--ink-secondary);
+            font-size: 0.9em;
+            line-height: 1.5;
+        }
+
+        /* ===== GAME MODES ===== */
+        .modes-bar {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: calc(var(--space) * 0.75);
+            margin-bottom: calc(var(--space) * 1.5);
+        }
+
+        .mode-card {
+            background: var(--bg-card);
+            border: 1px solid var(--line);
+            border-radius: var(--radius);
+            padding: calc(var(--space) * 0.875);
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .mode-card::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            opacity: 0.5;
+        }
+
+        .mode-card.hp::before { background: var(--accent-olive); }
+        .mode-card.ctrl::before { background: var(--accent-amber); }
+        .mode-card.snd::before { background: var(--accent-tan); }
+
+        .mode-card h4 {
+            font-family: "Black Ops One", "Chakra Petch", sans-serif;
+            font-weight: 400;
+            font-size: var(--step-1);
+            text-transform: uppercase;
+            margin-bottom: 0.4em;
+        }
+
+        .mode-card.hp h4 { color: var(--accent-olive-bright); }
+        .mode-card.ctrl h4 { color: var(--accent-amber); }
+        .mode-card.snd h4 { color: var(--accent-tan); }
+
+        .mode-card p {
+            color: var(--ink-secondary);
+            font-size: 0.85em;
+            line-height: 1.5;
+        }
+
+        .mode-maps {
+            margin-top: 0.5em;
+            padding-top: 0.5em;
+            border-top: 1px solid var(--line);
+            font-family: "Rajdhani", sans-serif;
+            font-weight: 600;
+            font-size: 0.8em;
+            color: var(--ink-muted);
+        }
+
+        /* ===== GUIDELINES ===== */
+        .guidelines {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: calc(var(--space) * 1.25);
+        }
+
+        .guideline-card {
+            background: var(--bg-surface);
+            border: 1px solid var(--line);
+            border-radius: var(--radius-lg);
+            padding: calc(var(--space) * 1.1);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .guideline-card::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 4px;
+            height: 100%;
+            opacity: 0.5;
+        }
+
+        .mlbb-section .guideline-card::before {
+            background: linear-gradient(180deg, var(--accent-gold), var(--accent-cyan));
+        }
+
+        .codm-section .guideline-card::before {
+            background: linear-gradient(180deg, var(--accent-olive), var(--accent-amber));
+        }
+
+        .guideline-card h3 {
+            font-family: "Orbitron", "Black Ops One", sans-serif;
+            font-weight: 700;
+            font-size: var(--step-1);
+            text-transform: uppercase;
+            letter-spacing: 0.06em;
+            margin-bottom: 0.6em;
+            display: flex;
+            align-items: center;
+            gap: 0.5em;
+            line-height: 1.3;
+        }
+
+        .mlbb-section .guideline-card h3 {
+            background: linear-gradient(135deg, var(--accent-gold), var(--accent-cyan));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .codm-section .guideline-card h3 {
+            background: linear-gradient(135deg, var(--accent-olive-bright), var(--accent-amber));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .guideline-card h3 .num {
+            font-family: "Rajdhani", "Chakra Petch", sans-serif;
+            font-weight: 700;
+            font-size: 0.85em;
+            color: var(--bg-deep);
+            width: 1.8em;
+            height: 1.8em;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+        }
+
+        .mlbb-section .guideline-card h3 .num {
+            background: var(--accent-gold);
+            border-radius: 50%;
+        }
+
+        .codm-section .guideline-card h3 .num {
+            background: var(--accent-olive);
+            border-radius: 2px;
+        }
+
+        .guideline-card ul {
+            list-style: none;
+            padding: 0;
+        }
+
+        .guideline-card li {
+            color: var(--ink-secondary);
+            padding: 0.35em 0;
+            padding-left: 1.1em;
+            position: relative;
+            border-bottom: 1px solid var(--line);
+            font-size: 0.95em;
+            line-height: 1.5;
+        }
+
+        .guideline-card li:last-child {
+            border-bottom: none;
+        }
+
+        .mlbb-section .guideline-card li::before {
+            content: "›";
+            position: absolute;
+            left: 0;
+            color: var(--accent-cyan);
+            font-weight: 700;
+            font-size: 1.1em;
+        }
+
+        .codm-section .guideline-card li::before {
+            content: "›";
+            position: absolute;
+            left: 0;
+            color: var(--accent-amber);
+            font-weight: 700;
+            font-size: 1.1em;
+        }
+
+        .guideline-card p {
+            color: var(--ink-secondary);
+            line-height: 1.6;
+            font-size: 0.95em;
+        }
+
+        .highlight-box {
+            border: 1px solid;
+            border-radius: var(--radius);
+            padding: 0.6em 0.875em;
+            margin-top: 0.6em;
+            font-family: "Rajdhani", "Chakra Petch", sans-serif;
+            font-weight: 600;
+            font-size: 0.9em;
+            line-height: 1.4;
+        }
+
+        .mlbb-section .highlight-box {
+            background: rgba(0, 212, 255, 0.05);
+            border-color: rgba(0, 212, 255, 0.15);
+            color: var(--accent-cyan);
+        }
+
+        .codm-section .highlight-box {
+            background: rgba(107, 142, 35, 0.06);
+            border-color: rgba(107, 142, 35, 0.2);
+            color: var(--accent-olive-bright);
+        }
+
+        .warning-box {
+            background: rgba(224, 64, 64, 0.05);
+            border: 1px solid rgba(224, 64, 64, 0.15);
+            border-radius: var(--radius);
+            padding: 0.6em 0.875em;
+            margin-top: 0.6em;
+            font-family: "Rajdhani", "Chakra Petch", sans-serif;
+            font-weight: 600;
+            color: var(--accent-red);
+            font-size: 0.9em;
+            line-height: 1.4;
+        }
+
+        .fullwidth-card {
+            grid-column: 1 / -1;
+        }
+
+        .restrict-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: calc(var(--space) * 0.6);
+            margin-top: 0.6em;
+        }
+
+        .restrict-category {
+            background: rgba(0,0,0,0.2);
+            border: 1px solid var(--line);
+            border-radius: var(--radius);
+            padding: 0.6em 0.75em;
+        }
+
+        .restrict-category h5 {
+            font-family: "Chakra Petch", sans-serif;
+            font-weight: 700;
+            font-size: 0.75rem;
+            color: var(--accent-amber);
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            margin-bottom: 0.3em;
+            border-bottom: 1px solid var(--line);
+            padding-bottom: 0.3em;
+        }
+
+        .restrict-category p {
+            font-size: 0.8em;
+            color: var(--ink-muted);
+            line-height: 1.4;
+        }
+
+        /* ===== MOBILE BRACKET ===== */
+        .mobile-round {
+            margin-bottom: calc(var(--space) * 1.5);
+        }
+        .mobile-round:last-child {
+            margin-bottom: 0;
+        }
+
+        .mobile-round-label {
+            font-family: "Orbitron", "Black Ops One", sans-serif;
+            font-weight: 700;
+            font-size: var(--step-1);
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            margin-bottom: calc(var(--space) * 0.75);
+            padding-bottom: 0.5em;
+            border-bottom: 2px solid;
+            display: flex;
+            align-items: center;
+            gap: 0.5em;
+        }
+
+        .mlbb-section .mobile-round-label {
+            color: var(--accent-gold);
+            border-color: var(--accent-gold-dim);
+        }
+
+        .codm-section .mobile-round-label {
+            color: var(--accent-olive-bright);
+            border-color: var(--accent-olive-dim);
+        }
+
+        .mobile-round-label .round-num {
+            font-family: "Rajdhani", "Chakra Petch", sans-serif;
+            font-size: 0.75em;
+            font-weight: 700;
+            width: 1.8em;
+            height: 1.8em;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+        }
+
+        .mlbb-section .mobile-round-label .round-num {
+            background: var(--accent-gold);
+            color: var(--bg-deep);
+            border-radius: 50%;
+        }
+
+        .codm-section .mobile-round-label .round-num {
+            background: var(--accent-olive);
+            color: var(--bg-deep);
+            border-radius: 2px;
+        }
+
+        .mobile-match-row {
+            display: flex;
+            gap: calc(var(--space) * 0.5);
+            margin-bottom: calc(var(--space) * 0.5);
+        }
+        .mobile-match-row:last-child {
+            margin-bottom: 0;
+        }
+
+        .mobile-connector {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            width: 28px;
+            flex-shrink: 0;
+        }
+        .mobile-connector .arrow-down {
+            width: 0;
+            height: 0;
+            border-left: 6px solid transparent;
+            border-right: 6px solid transparent;
+            border-top: 10px solid var(--accent-gold-dim);
+            margin-top: 2px;
+        }
+        .codm-section .mobile-connector .arrow-down {
+            border-top-color: var(--accent-olive-dim);
+        }
+        .mobile-connector .arrow-right {
+            width: 0;
+            height: 0;
+            border-top: 6px solid transparent;
+            border-bottom: 6px solid transparent;
+            border-left: 10px solid var(--accent-gold-dim);
+        }
+        .codm-section .mobile-connector .arrow-right {
+            border-left-color: var(--accent-olive-dim);
+        }
+        .mobile-connector .vline {
+            width: 2px;
+            flex: 1;
+            background: linear-gradient(to bottom, var(--accent-gold-dim), transparent);
+            min-height: 16px;
+        }
+        .codm-section .mobile-connector .vline {
+            background: linear-gradient(to bottom, var(--accent-olive-dim), transparent);
+        }
+        .mobile-connector-label {
+            font-family: "Rajdhani", "Chakra Petch", sans-serif;
+            font-size: 0.65rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            writing-mode: vertical-rl;
+            text-orientation: mixed;
+            letter-spacing: 0.1em;
+            padding: 0.3em 0;
+        }
+        .mlbb-section .mobile-connector-label {
+            color: var(--accent-gold);
+        }
+        .codm-section .mobile-connector-label {
+            color: var(--accent-olive-bright);
+        }
+
+        /* ===== FOOTER ===== */
+        footer {
+            position: relative;
+            z-index: 1;
+            text-align: center;
+            padding: calc(var(--space) * 1.5) var(--space);
+            border-top: 1px solid var(--line);
+            margin-top: calc(var(--space) * 1.5);
+            color: var(--ink-muted);
+            font-size: 0.85rem;
+            line-height: 1.6;
+        }
+
+        footer strong {
+            color: var(--accent-bright);
+            font-family: "Rajdhani", sans-serif;
+            font-weight: 600;
+        }
+
+        /* ===== SCROLLBAR ===== */
+        ::-webkit-scrollbar {
+            width: 6px;
+            height: 6px;
+        }
+        ::-webkit-scrollbar-track {
+            background: var(--bg-deep);
+        }
+        ::-webkit-scrollbar-thumb {
+            background: var(--accent-dim);
+            border-radius: 3px;
+        }
+
+        /* ===== ANIMATIONS ===== */
+        @media (prefers-reduced-motion: no-preference) {
+            header, .game-card, .bracket-wrapper, .guideline-card, .mode-card, .rules-toggle-bar {
+                opacity: 0;
+                transform: translateY(20px);
+                animation: fadeUp 0.5s ease forwards;
+            }
+            .game-card:nth-child(1) { animation-delay: 0.1s; }
+            .game-card:nth-child(2) { animation-delay: 0.2s; }
+            .bracket-wrapper { animation-delay: 0.1s; }
+            .mode-card:nth-child(1) { animation-delay: 0.1s; }
+            .mode-card:nth-child(2) { animation-delay: 0.18s; }
+            .mode-card:nth-child(3) { animation-delay: 0.26s; }
+            .rules-toggle-bar { animation-delay: 0.12s; }
+
+            @keyframes fadeUp {
+                to { opacity: 1; transform: translateY(0); }
+            }
+        }
+
+        /* ===== RESPONSIVE ===== */
+        @media (max-width: 768px) {
+            .accessibility-bar {
+                padding: 0.4em calc(var(--space) * 0.75);
+            }
+            .accessibility-bar .bar-label span {
+                display: none;
+            }
+            .a11y-btn {
+                font-size: 0.7rem;
+                padding: 0.35em 0.6em;
+            }
+            .register-btn {
+                font-size: 0.7rem;
+                padding: 0.45em 1em;
+            }
+            header {
+                padding: calc(var(--space) * 3.5) calc(var(--space) * 0.75) calc(var(--space) * 1);
+            }
+            .header-badge {
+                font-size: 0.75rem;
+                padding: 0.3em 0.9em;
+            }
+            .subtitle {
+                font-size: var(--step-1);
+                letter-spacing: 0.08em;
+            }
+            .tournament-meta {
+                gap: calc(var(--space) * 0.75);
+                margin-top: var(--space);
+            }
+            .meta-item { font-size: 0.8rem; }
+            .game-selector {
+                grid-template-columns: 1fr;
+                gap: var(--space);
+                padding: var(--space);
+            }
+            .game-icon { font-size: 2.5rem; }
+            .section-header h2 { font-size: var(--step-2); }
+            .format-badge {
+                font-size: 0.75rem;
+                padding: 0.25em 0.7em;
+            }
+            .bracket-wrapper {
+                padding: var(--space);
+                border-radius: var(--radius);
+            }
+            .bracket-labels {
+                grid-template-columns: 1fr;
+                gap: calc(var(--space) * 0.75);
+            }
+            .modes-bar {
+                grid-template-columns: 1fr;
+                gap: calc(var(--space) * 0.6);
+            }
+            .guidelines {
+                grid-template-columns: 1fr;
+                gap: var(--space);
+            }
+            .fullwidth-card { grid-column: auto; }
+            .guideline-card {
+                padding: var(--space);
+                border-radius: var(--radius);
+            }
+            .guideline-card h3 { font-size: var(--step-1); }
+            .guideline-card li { font-size: 0.9em; }
+            .champion-card {
+                padding: 0.875em 1.25em;
+            }
+            .trophy { font-size: 2rem; }
+            .restrict-grid {
+                grid-template-columns: 1fr;
+            }
+            .rules-toggle-bar {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 0.75em;
+            }
+            .rules-toggle-bar .toggle-buttons {
+                width: 100%;
+            }
+            .rules-toggle-btn {
+                flex: 1;
+                justify-content: center;
+            }
+        }
+
+        @media (max-width: 640px) {
+            .bracket-desktop { display: none; }
+            .bracket-mobile { display: block; }
+            .bracket-wrapper {
+                overflow-x: hidden;
+                padding: var(--space);
+            }
+            .team {
+                padding: 0.6em 0.75em;
+                min-height: 44px;
+            }
+            .team-name { font-size: 0.95rem; }
+            .team-label {
+                font-size: 0.6rem;
+                padding: 0.25em 0.6em;
+            }
+            .match-header {
+                font-size: 0.65rem;
+                padding: 0.4em 0.75em;
+            }
+            .match-format {
+                font-size: 0.6rem;
+                padding: 0.4em;
+            }
+            .championship-title {
+                writing-mode: horizontal-tb;
+                padding: 0.5em 1em;
+                font-size: var(--step-0);
+            }
+            .champion-card {
+                max-width: 100%;
+                padding: 1em;
+            }
+            .champion-card .team-name {
+                font-size: var(--step-1);
+            }
+        }
+
+        @media (max-width: 480px) {
+            .accessibility-bar {
+                gap: 0.4em;
+            }
+            .accessibility-bar .bar-left {
+                gap: 0.4em;
+            }
+            .a11y-btn svg {
+                width: 12px;
+                height: 12px;
+            }
+        }
+
+        @media (max-width: 360px) {
+            h1 { font-size: 1.5rem; }
+            .team { padding: 0.5em 0.6em; }
+            .team-name { font-size: 0.85rem; }
+            .team-label { font-size: 0.55rem; }
+            .match-header { font-size: 0.6rem; }
+        }
+
+        @media (min-width: 1200px) {
+            .bracket-desktop {
+                grid-template-columns: repeat(5, 1fr);
+                gap: calc(var(--space) * 0.75);
+            }
+        }
+
+        /* ===== PRINT ===== */
+        @media print {
+            body {
+                background: #fff;
+                color: #000;
+            }
+            body::before { display: none; }
+            .accessibility-bar { display: none; }
+            header {
+                background: #f5f5f5;
+                border-bottom: 2px solid #333;
+                padding: 1rem;
+                margin-top: 0;
+            }
+            h1 {
+                background: none;
+                -webkit-text-fill-color: #000;
+                color: #000;
+                font-size: 1.8rem;
+            }
+            .game-selector { display: none; }
+            .tournament-section { display: block !important; }
+            .tournament-section[hidden] { display: block !important; }
+            .bracket-wrapper, .guideline-card, .mode-card, .rules-toggle-bar {
+                border: 1px solid #ccc;
+                break-inside: avoid;
+                box-shadow: none;
+            }
+            .rules-panel { display: block !important; }
+            .match { border: 1px solid #999; }
+            .team { background: #f9f9f9; }
+            .team.winner { background: #fff8e1; }
+            .team.loser { opacity: 1; background: #ffebee; }
+            .champion-card {
+                background: #ffd700;
+                box-shadow: none;
+            }
+            .codm-section .champion-card::before { display: none; }
+            .champion-card .team-name, .champion-label { color: #000; }
+            .guideline-card::before { background: #333; }
+            .guideline-card h3 { color: #000; -webkit-text-fill-color: #000; }
+            .guideline-card h3 .num { background: #333; color: #fff; }
+            .guideline-card li, .guideline-card p { color: #333; }
+            .col-label { color: #0066cc; border-color: #0066cc; }
+            .section-header h2 { color: #000; -webkit-text-fill-color: #000; }
+            .format-badge { background: #333; color: #fff; }
+            .championship-title { color: #000; border-color: #666; }
+            .meta-item { color: #333; }
+            .meta-item::before { color: #000; }
+            .subtitle { color: #000; }
+            .header-badge { color: #0066cc; border-color: #0066cc; }
+            .bracket-label-box h3 { color: #2d3b2d; }
+            .bracket-label-box.lower h3 { color: #c00; }
+            .highlight-box { color: #0066cc; border-color: #0066cc; background: #f0f8ff; }
+            .warning-box { color: #c00; border-color: #c00; background: #fff5f5; }
+            .mode-card h4 { color: #2d3b2d; }
+            footer { color: #333; border-color: #ccc; }
+            footer strong { color: #000; }
+            .diff-badge { border: 1px solid #999 !important; }
+            .diff-badge.changed { background: #fff3e0; color: #e65100; }
+            .diff-badge.added { background: #e8f5e9; color: #2e7d32; }
+            .diff-badge.removed { background: #ffebee; color: #c62828; }
+        }
+
+        @page {
+            size: A4 landscape;
+            margin: 10mm;
+        }
+    </style>
+</head>
+<body>
+    <a href="#main-content" class="skip-link">Skip to main content</a>
+
+    <!-- ACCESSIBILITY BAR -->
+    <nav class="accessibility-bar" role="toolbar" aria-label="Accessibility controls">
+        <div class="bar-left">
+            <span class="bar-label">
+                <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2c1.1 0 2 .9 2 2s-.9 2-2 2-2-.9-2-2 .9-2 2-2zm9 7h-6v13h-2v-6h-2v6H9V9H3V7h18v2z"/></svg>
+                <span>Accessibility</span>
+            </span>
+            <button class="a11y-btn" id="btn-large-text" aria-pressed="false" title="Toggle large text">
+                <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 4v3H6v2h3v13h2V9h3V7h-3V4zm7 0v9h-2V4h2zm0 13v3h-2v-3h2z"/></svg>
+                Large Text
+            </button>
+            <button class="a11y-btn" id="btn-high-contrast" aria-pressed="false" title="Toggle high contrast">
+                <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18V4c4.41 0 8 3.59 8 8s-3.59 8-8 8z"/></svg>
+                High Contrast
+            </button>
+        </div>
+        <a href="https://forms.google.com" target="_blank" rel="noopener noreferrer" class="register-btn" aria-label="Open registration form in new tab">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M19 3H5c-1.11 0-2 .9-2 2v14c0 1.1.89 2 2 2h14c1.11 0 2-.9 2-2V5c0-1.1-.89-2-2-2zm-10 7H8v2h1v2H8v2h1v2H7V8h2v2zm6 0h-2v2h1v2h-1v2h1v2h-2V8h2v2z"/></svg>
+            Register Now
+        </a>
+    </nav>
+
+    <!-- HEADER -->
+    <header>
+        <div class="header-badge">CSU Lal-lo Campus</div>
+        <h1>Esports Tournament Hub</h1>
+        <div class="subtitle">Mobile Legends &middot; Call of Duty Mobile</div>
+        <div class="tournament-meta">
+            <span class="meta-item">Double Elimination</span>
+            <span class="meta-item">Face-to-Face Event</span>
+            <span class="meta-item">Registration Deadline: August 21, 2026</span>
+        </div>
+    </header>
+
+    <!-- GAME SELECTOR -->
+    <nav class="game-selector" role="tablist" aria-label="Select tournament">
+        <button class="game-card mlbb active" role="tab" aria-selected="true" aria-controls="mlbb-panel" id="tab-mlbb" tabindex="0">
+            <div class="game-icon">⚔️</div>
+            <h3>Mobile Legends</h3>
+            <p>5v5 MOBA &middot; Bang Bang</p>
+            <div class="game-meta">
+                <span>BO3 / BO5 Finals</span>
+                <span>5 Core + 2 Subs</span>
+            </div>
+        </button>
+        <button class="game-card codm" role="tab" aria-selected="false" aria-controls="codm-panel" id="tab-codm" tabindex="-1">
+            <div class="game-icon">🎯</div>
+            <h3>Call of Duty Mobile</h3>
+            <p>5v5 FPS &middot; Competitive</p>
+            <div class="game-meta">
+                <span>HP / Ctrl / S&D</span>
+                <span>5 Main + 1 Sub</span>
+            </div>
+        </button>
+    </nav>
+
+    <main id="main-content">
+
+        <!-- ======================================== -->
+        <!-- === MLBB SECTION ==================== -->
+        <!-- ======================================== -->
+        <section id="mlbb-panel" class="tournament-section mlbb-section active" role="tabpanel" aria-labelledby="tab-mlbb">
+            <!-- Bracket -->
+            <div class="section-header">
+                <h2>Knockout Stage</h2>
+                <div class="section-line"></div>
+                <span class="format-badge">Double Elimination</span>
+            </div>
+
+            <div class="bracket-wrapper">
+                <div class="bracket-desktop">
+                    <div class="bracket-col">
+                        <div class="col-label">Round 1</div>
+                        <div class="match">
+                            <div class="match-header">Match 1 — Upper Bracket</div>
+                            <div class="match-body">
+                                <div class="team"><span class="team-name">TEAM 1</span></div>
+                                <div class="team"><span class="team-name">TEAM 2</span></div>
+                            </div>
+                            <div class="match-format">Best of 3</div>
+                        </div>
+                        <div style="height: 20px;"></div>
+                        <div class="match">
+                            <div class="match-header">Match 2 — Upper Bracket</div>
+                            <div class="match-body">
+                                <div class="team"><span class="team-name">TEAM 3</span></div>
+                                <div class="team"><span class="team-name">TEAM 4</span></div>
+                            </div>
+                            <div class="match-format">Best of 3</div>
+                        </div>
+                        <div style="height: 40px;"></div>
+                        <div class="match">
+                            <div class="match-header red">Match 4 — Lower Bracket</div>
+                            <div class="match-body">
+                                <div class="team loser"><span class="team-name">Loser M1</span><span class="team-label loss">Lose</span></div>
+                                <div class="team loser"><span class="team-name">Loser M2</span><span class="team-label loss">Lose</span></div>
+                            </div>
+                            <div class="match-format">Best of 3 — Elimination</div>
+                        </div>
+                    </div>
+
+                    <div class="bracket-col">
+                        <div class="col-label">Round 2</div>
+                        <div class="match">
+                            <div class="match-header cyan">Match 3 — Upper Bracket</div>
+                            <div class="match-body">
+                                <div class="team winner"><span class="team-name">Winner M1</span><span class="team-label win">Win</span></div>
+                                <div class="team winner"><span class="team-name">Winner M2</span><span class="team-label win">Win</span></div>
+                            </div>
+                            <div class="match-format">Best of 3</div>
+                        </div>
+                        <div style="height: 80px;"></div>
+                        <div class="match">
+                            <div class="match-header red">Match 5 — Lower Bracket</div>
+                            <div class="match-body">
+                                <div class="team loser"><span class="team-name">Loser M3</span><span class="team-label loss">Lose</span></div>
+                                <div class="team winner"><span class="team-name">Winner M4</span><span class="team-label win">Win</span></div>
+                            </div>
+                            <div class="match-format">Best of 3 — Elimination</div>
+                        </div>
+                    </div>
+
+                    <div class="bracket-col">
+                        <div class="col-label">Bracket Finals</div>
+                        <div class="match">
+                            <div class="match-header cyan">Upper Bracket Final</div>
+                            <div class="match-body">
+                                <div class="team winner"><span class="team-name">Winner M3</span><span class="team-label win">Win</span></div>
+                            </div>
+                            <div class="match-format">Advances to Grand Finals</div>
+                        </div>
+                        <div style="height: 60px;"></div>
+                        <div class="match">
+                            <div class="match-header red">Lower Bracket Final</div>
+                            <div class="match-body">
+                                <div class="team winner"><span class="team-name">Winner M5</span><span class="team-label win">Win</span></div>
+                            </div>
+                            <div class="match-format">Advances to Grand Finals</div>
+                        </div>
+                    </div>
+
+                    <div class="bracket-col">
+                        <div class="col-label">Grand Finals</div>
+                        <div class="match" style="border-color: var(--accent-gold); box-shadow: 0 0 20px rgba(212,175,55,0.15);">
+                            <div class="match-header" style="background: linear-gradient(90deg, var(--accent-gold), transparent); color: var(--accent-gold-bright);">Championship Match</div>
+                            <div class="match-body">
+                                <div class="team winner" style="border-left-color: var(--accent-cyan);"><span class="team-name">UB Champion</span></div>
+                                <div class="team winner" style="border-left-color: var(--accent-red);"><span class="team-name">LB Champion</span></div>
+                            </div>
+                            <div class="match-format" style="color: var(--accent-gold); font-weight: 700;">Best of 5</div>
+                        </div>
+                    </div>
+
+                    <div class="championship-col">
+                        <div class="championship-title">Champion</div>
+                        <div class="champion-card">
+                            <div class="trophy">🏆</div>
+                            <div class="champion-label">Tournament Champion</div>
+                            <div class="team-name">TEAM 15</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="bracket-mobile">
+                    <div class="mobile-round">
+                        <div class="mobile-round-label"><span class="round-num">1</span> Upper Bracket — Round 1</div>
+                        <div class="mobile-match-row">
+                            <div class="match">
+                                <div class="match-header">Match 1</div>
+                                <div class="match-body">
+                                    <div class="team"><span class="team-name">TEAM 1</span></div>
+                                    <div class="team"><span class="team-name">TEAM 2</span></div>
+                                </div>
+                                <div class="match-format">Best of 3</div>
+                            </div>
+                            <div class="mobile-connector"><div class="vline"></div><div class="arrow-down"></div></div>
+                            <div class="match">
+                                <div class="match-header">Match 2</div>
+                                <div class="match-body">
+                                    <div class="team"><span class="team-name">TEAM 3</span></div>
+                                    <div class="team"><span class="team-name">TEAM 4</span></div>
+                                </div>
+                                <div class="match-format">Best of 3</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="mobile-round">
+                        <div class="mobile-round-label"><span class="round-num">2</span> Upper Bracket — Round 2</div>
+                        <div class="mobile-match-row">
+                            <div class="match">
+                                <div class="match-header cyan">Match 3</div>
+                                <div class="match-body">
+                                    <div class="team winner"><span class="team-name">Winner M1</span><span class="team-label win">Win</span></div>
+                                    <div class="team winner"><span class="team-name">Winner M2</span><span class="team-label win">Win</span></div>
+                                </div>
+                                <div class="match-format">Best of 3</div>
+                            </div>
+                            <div class="mobile-connector"><div class="vline"></div><div class="arrow-down"></div></div>
+                            <div style="flex:1;"></div>
+                        </div>
+                    </div>
+
+                    <div class="mobile-round">
+                        <div class="mobile-round-label"><span class="round-num">3</span> Upper Bracket Final</div>
+                        <div class="mobile-match-row">
+                            <div class="match">
+                                <div class="match-header cyan">UB Final</div>
+                                <div class="match-body">
+                                    <div class="team winner"><span class="team-name">Winner M3</span><span class="team-label win">Win</span></div>
+                                </div>
+                                <div class="match-format">Advances to Grand Finals</div>
+                            </div>
+                            <div class="mobile-connector"><div class="mobile-connector-label">Grand Finals</div><div class="arrow-right"></div></div>
+                            <div style="flex:1;"></div>
+                        </div>
+                    </div>
+
+                    <div class="mobile-round">
+                        <div class="mobile-round-label" style="color: var(--accent-red); border-color: var(--accent-red-dim);"><span class="round-num" style="background: var(--accent-red);">L1</span> Lower Bracket — Round 1</div>
+                        <div class="mobile-match-row">
+                            <div class="match">
+                                <div class="match-header red">Match 4</div>
+                                <div class="match-body">
+                                    <div class="team loser"><span class="team-name">Loser M1</span><span class="team-label loss">Lose</span></div>
+                                    <div class="team loser"><span class="team-name">Loser M2</span><span class="team-label loss">Lose</span></div>
+                                </div>
+                                <div class="match-format">Best of 3 — Elimination</div>
+                            </div>
+                            <div class="mobile-connector"><div class="vline" style="background: linear-gradient(to bottom, var(--accent-red-dim), transparent);"></div><div class="arrow-down" style="border-top-color: var(--accent-red-dim);"></div></div>
+                            <div style="flex:1;"></div>
+                        </div>
+                    </div>
+
+                    <div class="mobile-round">
+                        <div class="mobile-round-label" style="color: var(--accent-red); border-color: var(--accent-red-dim);"><span class="round-num" style="background: var(--accent-red);">L2</span> Lower Bracket — Round 2</div>
+                        <div class="mobile-match-row">
+                            <div class="match">
+                                <div class="match-header red">Match 5</div>
+                                <div class="match-body">
+                                    <div class="team loser"><span class="team-name">Loser M3</span><span class="team-label loss">Lose</span></div>
+                                    <div class="team winner"><span class="team-name">Winner M4</span><span class="team-label win">Win</span></div>
+                                </div>
+                                <div class="match-format">Best of 3 — Elimination</div>
+                            </div>
+                            <div class="mobile-connector"><div class="vline" style="background: linear-gradient(to bottom, var(--accent-red-dim), transparent);"></div><div class="arrow-down" style="border-top-color: var(--accent-red-dim);"></div></div>
+                            <div style="flex:1;"></div>
+                        </div>
+                    </div>
+
+                    <div class="mobile-round">
+                        <div class="mobile-round-label" style="color: var(--accent-red); border-color: var(--accent-red-dim);"><span class="round-num" style="background: var(--accent-red);">LF</span> Lower Bracket Final</div>
+                        <div class="mobile-match-row">
+                            <div class="match">
+                                <div class="match-header red">LB Final</div>
+                                <div class="match-body">
+                                    <div class="team winner"><span class="team-name">Winner M5</span><span class="team-label win">Win</span></div>
+                                </div>
+                                <div class="match-format">Advances to Grand Finals</div>
+                            </div>
+                            <div class="mobile-connector"><div class="mobile-connector-label" style="color: var(--accent-red);">Grand Finals</div><div class="arrow-right" style="border-left-color: var(--accent-red-dim);"></div></div>
+                            <div style="flex:1;"></div>
+                        </div>
+                    </div>
+
+                    <div class="mobile-round">
+                        <div class="mobile-round-label" style="color: var(--accent-gold); border-color: var(--accent-gold-dim);"><span class="round-num" style="background: var(--accent-gold); color: var(--bg-deep);">GF</span> Grand Finals</div>
+                        <div class="mobile-match-row">
+                            <div class="match" style="border-color: var(--accent-gold); box-shadow: 0 0 20px rgba(212,175,55,0.15);">
+                                <div class="match-header" style="background: linear-gradient(90deg, var(--accent-gold), transparent); color: var(--accent-gold-bright);">Championship Match</div>
+                                <div class="match-body">
+                                    <div class="team winner" style="border-left-color: var(--accent-cyan);"><span class="team-name">UB Champion</span></div>
+                                    <div class="team winner" style="border-left-color: var(--accent-red);"><span class="team-name">LB Champion</span></div>
+                                </div>
+                                <div class="match-format" style="color: var(--accent-gold); font-weight: 700;">Best of 5</div>
+                            </div>
+                            <div class="mobile-connector"><div class="mobile-connector-label" style="color: var(--accent-gold);">Champion</div><div class="arrow-right" style="border-left-color: var(--accent-gold-dim);"></div></div>
+                            <div class="champion-card" style="flex: 1; max-width: 160px;">
+                                <div class="trophy">🏆</div>
+                                <div class="champion-label">Champion</div>
+                                <div class="team-name" style="font-size: 1rem;">TEAM 15</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="bracket-labels">
+                    <div class="bracket-label-box upper">
+                        <h3>Upper Bracket</h3>
+                        <p>Teams start here. One loss drops you to the Lower Bracket. All matches are Best-of-3.</p>
+                    </div>
+                    <div class="bracket-label-box lower">
+                        <h3>Lower Bracket</h3>
+                        <p>Second chance for first-round losers. A loss here means elimination. All matches are Best-of-3.</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Guidelines -->
+            <div class="section-header" style="margin-top: calc(var(--space) * 2.5);">
+                <h2>Tournament Guidelines</h2>
+                <div class="section-line"></div>
+                <span class="format-badge">Official Rules</span>
+            </div>
+
+            <div class="guidelines">
+                <div class="guideline-card">
+                    <h3><span class="num">1</span> Player Requirements</h3>
+                    <ul>
+                        <li>Bonafide students of CSU Lal-lo Campus</li>
+                        <li>Officially enrolled during the current academic year</li>
+                        <li>Must present valid CSU Student ID for verification</li>
+                        <li>Must use registered IGN and UID</li>
+                    </ul>
+                </div>
+
+                <div class="guideline-card">
+                    <h3><span class="num">2</span> Team Requirements</h3>
+                    <ul>
+                        <li>All members from the same program</li>
+                        <li>5 Core Players required</li>
+                        <li>2 Substitute Players (optional)</li>
+                        <li>Only registered team members may participate</li>
+                    </ul>
+                </div>
+
+                <div class="guideline-card">
+                    <h3><span class="num">3</span> Tournament Format</h3>
+                    <ul>
+                        <li>Double-Elimination (Upper & Lower Bracket)</li>
+                        <li>2 losses = elimination</li>
+                        <li>Upper Bracket: Best-of-3</li>
+                        <li>Lower Bracket: Best-of-3</li>
+                        <li>Grand Finals: Best-of-5</li>
+                    </ul>
+                </div>
+
+                <div class="guideline-card">
+                    <h3><span class="num">4</span> Time & Match Protocol</h3>
+                    <ul>
+                        <li>Be ready 5 minutes before match time</li>
+                        <li>5-minute grace period allowed</li>
+                        <li>More than 5 minutes late = automatic DQ</li>
+                        <li>Follow official tournament schedule strictly</li>
+                    </ul>
+                </div>
+
+                <div class="guideline-card">
+                    <h3><span class="num">5</span> Player Verification</h3>
+                    <ul>
+                        <li>Face-to-face, physically present at venue</li>
+                        <li>In-person verification before each match</li>
+                        <li>Valid CSU Student ID or proof of enrollment required</li>
+                        <li>Registered MLBB account must be used</li>
+                        <li>Device and account inspection may occur</li>
+                    </ul>
+                </div>
+
+                <div class="guideline-card">
+                    <h3><span class="num">6</span> Roster Rules</h3>
+                    <ul>
+                        <li>Submit complete roster before deadline</li>
+                        <li>Include: Name, IGN, UID, Year, Program, Student ID</li>
+                        <li>Deadline: August 21, 2026</li>
+                        <li>No changes after deadline without approval</li>
+                        <li>Unregistered players = immediate DQ</li>
+                    </ul>
+                </div>
+
+                <div class="guideline-card">
+                    <h3><span class="num">7</span> Technical & Game Rules</h3>
+                    <ul>
+                        <li>Latest official MLBB version required</li>
+                        <li>Teams responsible for own devices & internet</li>
+                        <li>3 pauses per game (type "P" in chat)</li>
+                        <li>No pausing during clashes or objective contests</li>
+                        <li>Auto-pick is valid and final — no rematch</li>
+                    </ul>
+                </div>
+
+                <div class="guideline-card fullwidth-card">
+                    <h3><span class="num">8</span> Grounds for Disqualification</h3>
+                    <ul>
+                        <li>Deliberate stalling or intentional delay</li>
+                        <li>Leaving a match before it ends</li>
+                        <li>Use of exploits, hacks, cheats, or unauthorized programs</li>
+                        <li>Playing with an alternate or undeclared account</li>
+                        <li>Unsportsmanlike conduct, toxicity, harassment</li>
+                        <li>Physical violence or threats</li>
+                        <li>Betting, gambling, or match-fixing</li>
+                        <li>Stream sniping or using live broadcast for unfair advantage</li>
+                        <li>Any attempt to compromise tournament integrity</li>
+                    </ul>
+                    <div class="warning-box">⚠ Tournament officials may conduct additional verification at any time. Falsification of player information will result in disqualification.</div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ======================================== -->
+        <!-- === CODM SECTION ==================== -->
+        <!-- ======================================== -->
+        <section id="codm-panel" class="tournament-section codm-section" role="tabpanel" aria-labelledby="tab-codm" hidden>
+            <!-- Game Modes -->
+            <div class="section-header">
+                <h2>Game Modes</h2>
+                <div class="section-line"></div>
+                <span class="format-badge">Competitive Format</span>
+            </div>
+            <div class="modes-bar">
+                <div class="mode-card hp">
+                    <h4>Hardpoint</h4>
+                    <p>Round Score Limit: 250</p>
+                    <p>Time Limit: 10:00</p>
+                    <div class="mode-maps">Summit · Arsenal · Hacienda · Takeoff · Combine</div>
+                </div>
+                <div class="mode-card ctrl">
+                    <h4>Control</h4>
+                    <p>Round Limit: 3 Rounds</p>
+                    <p>Round Time: 1:30</p>
+                    <div class="mode-maps">Raid · Standoff · Crossroads Strike</div>
+                </div>
+                <div class="mode-card snd">
+                    <h4>Search & Destroy</h4>
+                    <p>Round Win Limit: 9 Rounds</p>
+                    <p>Round Time: 2:00 · Overtime: Yes</p>
+                    <div class="mode-maps">Tunisia · Firing Range · Slums · Coastal · Meltdown</div>
+                </div>
+            </div>
+
+            <!-- Rules Toggle Bar -->
+            <div class="section-header">
+                <h2>Rules & Guidelines</h2>
+                <div class="section-line"></div>
+                <span class="format-badge">Official Rules</span>
+            </div>
+
+            <div class="rules-toggle-bar">
+                <div class="toggle-info">
+                    <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z"/></svg>
+                    <span>Viewing: <span class="current-rules-label" id="rules-label">CSU Lal-lo Rules (Draft)</span></span>
+                </div>
+                <div class="toggle-buttons">
+                    <button class="rules-toggle-btn active" id="btn-old-rules" data-panel="old-rules-panel" aria-pressed="true">
+                        <span class="dot"></span>
+                        CSU Lal-lo Rules
+                    </button>
+                    <button class="rules-toggle-btn" id="btn-new-rules" data-panel="new-rules-panel" aria-pressed="false">
+                        <span class="dot"></span>
+                        Official 2026 Esports Rules
+                    </button>
+                    <button class="rules-toggle-btn" id="btn-compare" data-panel="compare-panel" aria-pressed="false">
+                        <span class="dot"></span>
+                        Compare Differences
+                    </button>
+                </div>
+            </div>
+
+            <!-- OLD RULES PANEL -->
+            <div class="rules-panel active" id="old-rules-panel">
+                <div class="guidelines">
+                    <div class="guideline-card">
+                        <h3><span class="num">1</span> General Conduct</h3>
+                        <ul>
+                            <li>Professional sportsmanship required at all times</li>
+                            <li>No taunting, harassment, or hate speech</li>
+                            <li>Cheating, hacks, mods, or exploits = immediate DQ + forfeit</li>
+                            <li>Players responsible for device and connection stability</li>
+                            <li>Max 5-minute pause for disconnections, no replay beyond that</li>
+                        </ul>
+                    </div>
+
+                    <div class="guideline-card">
+                        <h3><span class="num">2</span> Team Composition</h3>
+                        <ul>
+                            <li>Currently enrolled CSU students only</li>
+                            <li>5 main players + up to 1 substitute</li>
+                            <li>No players with major COD pro tournament history</li>
+                            <li>Roster must be submitted before tournament begins</li>
+                            <li>No roster changes once tournament starts</li>
+                            <li>Substitutions only between matches (not during a game)</li>
+                        </ul>
+                    </div>
+
+                    <div class="guideline-card">
+                        <h3><span class="num">3</span> Match Procedures</h3>
+                        <ul>
+                            <li>Check in with officials 15 minutes before match time</li>
+                            <li>Enter lobby within 5 minutes of official match time</li>
+                            <li>Failure to enter lobby after 5 min = forfeit</li>
+                            <li>Captains must immediately report results to officials</li>
+                            <li>Screenshot evidence required for disputes</li>
+                            <li>Upload screenshots within 15 minutes after match ends</li>
+                        </ul>
+                    </div>
+
+                    <div class="guideline-card">
+                        <h3><span class="num">4</span> Gun Roles</h3>
+                        <ul>
+                            <li>4 Weapon Class Roles must be declared per player</li>
+                            <li>Assault Rifles (ARs) — Assault Rifle class only</li>
+                            <li>Sub-Machine Guns (SMGs) — SMG class only</li>
+                            <li>Heavy — Shotgun and LMG classes</li>
+                            <li>Marksman — Sniper and Marksman Rifle classes</li>
+                            <li>Pool: 3 ARs, 3 SMGs, 2 Heavy, 2 Marksman roles</li>
+                        </ul>
+                    </div>
+
+                    <div class="guideline-card">
+                        <h3><span class="num">5</span> Operator Skills</h3>
+                        <ul>
+                            <li>Each player declares their Operator Skill before tournament</li>
+                            <li>No two players on the same team may use the same skill</li>
+                            <li>Each player must have a unique Operator Skill</li>
+                            <li>Allowed: Annihilator, Claw, Death Machine, Equalizer, Gravity Spikes, Gravity Vortex Gun, Purifier, Sparrow, Tempest, War Machine</li>
+                        </ul>
+                    </div>
+
+                    <div class="guideline-card fullwidth-card">
+                        <h3><span class="num">6</span> Restricted Items</h3>
+                        <p style="margin-bottom:0.5em;">Using any restricted item results in disqualification and the point is awarded to the opponent. New content is restricted for 21 days from release unless stated otherwise.</p>
+                        <div class="restrict-grid">
+                            <div class="restrict-category">
+                                <h5>Restricted Weapons</h5>
+                                <p>NA-45, SVD, XPR, Thumper, SKS, Shorty, SMRS, FHJ-18, Argus, VLK Rogue, M1 Grand, MG 82, MG 42, T63, SO14, Melee weapons</p>
+                            </div>
+                            <div class="restrict-category">
+                                <h5>Restricted Lethal</h5>
+                                <p>Trip Mine, Thermite, Molotov Cocktail, Contact Grenade, C4, Cluster Grenade</p>
+                            </div>
+                            <div class="restrict-category">
+                                <h5>Restricted Tactical</h5>
+                                <p>Heartbeat Sensor, Gas Grenades, Flash Drone, Echo Grenade, Stim Shot, Cryo Bomb, Storm Ball, Decoy Grenade, Trip Sensor, Douser Grenade</p>
+                            </div>
+                            <div class="restrict-category">
+                                <h5>Restricted Perks</h5>
+                                <p>Persistence, Restock, Martyrdom, Quick Fix, Hardline, Alert, High Alert, Tracker, Recon, Pinpoint, Unit Support, Tactician, Vulture, Overclock, Engineer, Demo Expert, Survival Training, Assassin</p>
+                            </div>
+                            <div class="restrict-category">
+                                <h5>Restricted Attachments</h5>
+                                <p>Akimbo, Disable, Thermite/Dragon's Breath/Explosive/Incendiary Ammo (all guns), Slug Ammo (shotguns), and various weapon-specific attachments</p>
+                            </div>
+                            <div class="restrict-category">
+                                <h5>Other Restrictions</h5>
+                                <p>All Legendary utility skins, all Wildcards, all restricted operator skins, and newly added content within 21 days of release</p>
+                            </div>
+                        </div>
+                        <div class="warning-box">⚠ All Scorestreaks except Hunter Killer Drone, Predator Missile, and EMP Systems are restricted. All Operator Skills except the 10 listed are restricted.</div>
+                    </div>
+
+                    <div class="guideline-card">
+                        <h3><span class="num">7</span> Penalties & Forfeits</h3>
+                        <ul>
+                            <li>Minor violations = warnings or temporary penalties</li>
+                            <li>Major violations (cheating, toxicity) = immediate DQ</li>
+                            <li>Cannot start within 5 min = forfeit Game 1</li>
+                            <li>Cannot field at least 4 players = forfeit</li>
+                            <li>Game 2 forfeit if 10 minutes late</li>
+                        </ul>
+                    </div>
+
+                    <div class="guideline-card">
+                        <h3><span class="num">8</span> Admin Rights</h3>
+                        <ul>
+                            <li>Admin may overrule all rules based on situation</li>
+                            <li>Organizer's decision is final after appeal</li>
+                            <li>Only coaches or team captains may communicate with Tournament Manager</li>
+                            <li>Violation of player conduct = penalties, forfeit, or DQ</li>
+                        </ul>
+                        <div class="highlight-box">Ensure devices are fully charged. No extra time for equipment issues. Take screenshots of every match result.</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- NEW RULES PANEL (Official 2026) -->
+            <div class="rules-panel" id="new-rules-panel">
+                <div class="guidelines">
+                    <div class="guideline-card">
+                        <h3><span class="num">1</span> General Conduct</h3>
+                        <ul>
+                            <li>Professional sportsmanship required at all times</li>
+                            <li>No taunting, harassment, or hate speech</li>
+                            <li>Cheating, hacks, mods, or exploits = immediate DQ + forfeit</li>
+                            <li>Players responsible for device and connection stability</li>
+                            <li>Max 5-minute pause for disconnections, no replay beyond that</li>
+                            <li>All players encouraged to record matches for evidence</li>
+                        </ul>
+                    </div>
+
+                    <div class="guideline-card">
+                        <h3><span class="num">2</span> Team Composition</h3>
+                        <ul>
+                            <li>Currently enrolled CSU students only</li>
+                            <li>5 main players + up to 1 substitute</li>
+                            <li>No players with major COD pro tournament history</li>
+                            <li>Roster must be submitted before tournament begins</li>
+                            <li>No roster changes once tournament starts</li>
+                            <li>Substitutions only between matches (not during a game)</li>
+                        </ul>
+                    </div>
+
+                    <div class="guideline-card">
+                        <h3><span class="num">3</span> Match Procedures</h3>
+                        <ul>
+                            <li>Check in with officials 15 minutes before match time</li>
+                            <li>Enter lobby within 5 minutes of official match time</li>
+                            <li>Failure to enter lobby after 5 min = forfeit</li>
+                            <li>Captains must immediately report results to officials</li>
+                            <li>Screenshot evidence required for disputes</li>
+                            <li>Upload screenshots within 15 minutes after match ends</li>
+                        </ul>
+                    </div>
+
+                    <div class="guideline-card">
+                        <h3><span class="num">4</span> Match Format</h3>
+                        <ul>
+                            <li>All matches: Best of 5 series</li>
+                            <li>Grand Finals: Best of 7 with 1-map advantage for Winner's Finals team</li>
+                            <li>Mode order: Hardpoint → Search & Destroy → Control → Hardpoint → Search & Destroy</li>
+                            <li>Map and side selection via pick/ban veto process</li>
+                            <li>Higher seed hosts the lobby</li>
+                        </ul>
+                    </div>
+
+                    <div class="guideline-card">
+                        <h3><span class="num">5</span> Gun Roles</h3>
+                        <ul>
+                            <li>4 Weapon Class Roles must be declared per player</li>
+                            <li>Assault Rifles (ARs) — Assault Rifle class only</li>
+                            <li>Sub-Machine Guns (SMGs) — SMG class only</li>
+                            <li>Heavy — Shotgun and LMG classes</li>
+                            <li>Marksman — Sniper and Marksman Rifle classes</li>
+                            <li>Pool: 3 ARs, 3 SMGs, 2 Heavy, 2 Marksman roles</li>
+                        </ul>
+                    </div>
+
+                    <div class="guideline-card">
+                        <h3><span class="num">6</span> Operator Skills</h3>
+                        <ul>
+                            <li>Each player declares their Operator Skill before tournament</li>
+                            <li>No two players on the same team may use the same skill</li>
+                            <li>Players may switch Operator Skills mid-map (must remain unique)</li>
+                            <li>Violation = forfeit the map where it occurred</li>
+                            <li>Allowed: Annihilator, Claw, Death Machine, Equalizer, Gravity Spikes, Gravity Vortex Gun, Purifier, Sparrow, Tempest, War Machine</li>
+                        </ul>
+                    </div>
+
+                    <div class="guideline-card fullwidth-card">
+                        <h3><span class="num">7</span> Restricted Items (Official 2026)</h3>
+                        <p style="margin-bottom:0.5em;">Using any restricted item results in forfeiture of that game, match, and/or disqualification. New content is restricted for 21 days from release. Players must ask tournament administration about any content they are unsure about.</p>
+                        <div class="restrict-grid">
+                            <div class="restrict-category">
+                                <h5>Restricted Weapons</h5>
+                                <p><strong>Snipers:</strong> NA-45, SVD, XPR, SO14<br><strong>Shotguns:</strong> Argus, R9-0<br><strong>Pistols:</strong> Shorty<br><strong>Launchers:</strong> D13 Sector, FHJ-18, SMRS, Thumper</p>
+                            </div>
+                            <div class="restrict-category">
+                                <h5>Restricted Lethal</h5>
+                                <p>C4, Cluster Grenade, Contact Grenade, Drill Charge, Molotov Cocktail, Thermite, Trip Mine</p>
+                            </div>
+                            <div class="restrict-category">
+                                <h5>Restricted Tactical</h5>
+                                <p>Heartbeat Sensor, Gas Grenades, Flash Drone, Echo Grenade, Stim Shot, Cryo Bomb, Storm Ball, Decoy Grenade, Trip Sensor, Douser Grenade</p>
+                            </div>
+                            <div class="restrict-category">
+                                <h5>Restricted Perks</h5>
+                                <p>Persistence, Restock, Martyrdom, Quick Fix, Hardline, Alert, High Alert, Tracker, Recon, Pinpoint, Unit Support, Tactician, Vulture, Overclock, Engineer, Demo Expert, Survival Training, Assassin</p>
+                            </div>
+                            <div class="restrict-category">
+                                <h5>Restricted Attachments (New Additions)</h5>
+                                <p><strong>50 GS:</strong> Lightweight Trigger, Match Grade Trigger<br><strong>LAG 53:</strong> 13.0" OSW Para Barrel<br><strong>MG42:</strong> KRAUSNICK 355MM Rapid, 6.5 ARISAKA 125 Round Drums, Recoil Booster<br><strong>QQ9:</strong> 10MM 30 Round Reload<br><strong>Tundra:</strong> 26.5" Hammer Forged, 28.2" Tiger Team Barrel<br><strong>Type 63:</strong> Airborne Elastic Wrap Grip, Firm Grip Tape, 16.4" Rapid Fire, 16.4" Titanium, 18.3" Strike Team<br><strong>SKS:</strong> Tactical Foregrip A, Granulated Grip Tape<br>Plus all previously restricted attachments</p>
+                            </div>
+                            <div class="restrict-category">
+                                <h5>Other Restrictions</h5>
+                                <p>All Legendary utility skins, all Wildcards, all restricted operator skins, newly added content within 21 days of release</p>
+                            </div>
+                        </div>
+                        <div class="warning-box">⚠ All Scorestreaks except Hunter Killer Drone, Predator Missile, and EMP Systems are restricted. All Operator Skills except the 10 listed are restricted.</div>
+                    </div>
+
+                    <div class="guideline-card">
+                        <h3><span class="num">8</span> Penalties & Forfeits</h3>
+                        <ul>
+                            <li>Minor violations = warnings or temporary penalties</li>
+                            <li>Major violations (cheating, toxicity) = immediate DQ</li>
+                            <li>Cannot start within 5 min = forfeit Game 1</li>
+                            <li>Cannot field at least 4 players = forfeit</li>
+                            <li>Game 2 forfeit if 10 minutes late</li>
+                        </ul>
+                    </div>
+
+                    <div class="guideline-card">
+                        <h3><span class="num">9</span> Admin Rights</h3>
+                        <ul>
+                            <li>Admin may overrule all rules based on situation</li>
+                            <li>Organizer's decision is final after appeal</li>
+                            <li>Only coaches or team captains may communicate with Tournament Manager</li>
+                            <li>Violation of player conduct = penalties, forfeit, or DQ</li>
+                        </ul>
+                        <div class="highlight-box">Ensure devices are fully charged. No extra time for equipment issues. Take screenshots of every match result. Record all matches for evidence.</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- COMPARE PANEL -->
+            <div class="rules-panel" id="compare-panel">
+                <div class="diff-legend">
+                    <span><span class="dot changed"></span> Changed</span>
+                    <span><span class="dot added"></span> Added in Official 2026</span>
+                    <span><span class="dot removed"></span> Removed / Not in Official</span>
+                </div>
+                <div class="guidelines">
+                    <div class="guideline-card">
+                        <h3><span class="num">1</span> Game Mode Settings</h3>
+                        <ul>
+                            <li>Hardpoint Score Limit: 250 <span class="diff-badge changed">Unchanged</span></li>
+                            <li>Hardpoint Time Limit: 600 (10 min) <span class="diff-badge changed">Unchanged</span></li>
+                            <li>Control Round Limit: 3 <span class="diff-badge changed">Unchanged</span></li>
+                            <li>Control Round Time: 90 <span class="diff-badge changed">Unchanged</span></li>
+                            <li>S&D Round Win Limit: <strong style="color:var(--accent-red);">7</strong> (CSU) vs <strong style="color:var(--accent-olive-bright);">9</strong> (Official) <span class="diff-badge changed">Changed</span></li>
+                            <li>S&D Round Time: 120 <span class="diff-badge changed">Unchanged</span></li>
+                            <li>S&D Overtime: Yes, Cap 20 <span class="diff-badge changed">Unchanged</span></li>
+                        </ul>
+                    </div>
+
+                    <div class="guideline-card">
+                        <h3><span class="num">2</span> Match Format</h3>
+                        <ul>
+                            <li>Series format not clearly defined in CSU rules <span class="diff-badge added">Added</span></li>
+                            <li>Official: All matches Best of 5 <span class="diff-badge added">Added</span></li>
+                            <li>Official: Grand Finals Best of 7 with 1-map advantage <span class="diff-badge added">Added</span></li>
+                            <li>Mode order: HP → S&D → Ctrl → HP → S&D <span class="diff-badge added">Added</span></li>
+                            <li>Pick/ban veto process for map selection <span class="diff-badge added">Added</span></li>
+                            <li>Higher seed hosts the lobby <span class="diff-badge added">Added</span></li>
+                        </ul>
+                    </div>
+
+                    <div class="guideline-card">
+                        <h3><span class="num">3</span> Restricted Weapons</h3>
+                        <ul>
+                            <li>SKS listed as sniper in CSU rules <span class="diff-badge removed">Not in Official</span></li>
+                            <li>VLK Rogue (shotgun) in CSU <span class="diff-badge removed">Not in Official</span></li>
+                            <li>R9-0 (shotgun) in Official <span class="diff-badge added">Added</span></li>
+                            <li>D13 Sector (launcher) in Official <span class="diff-badge added">Added</span></li>
+                            <li>M1 Grand, MG 82, MG 42, T63, SO14 in CSU <span class="diff-badge removed">Not in Official</span></li>
+                            <li>Melee weapons restricted in CSU <span class="diff-badge removed">Not explicitly in Official</span></li>
+                        </ul>
+                    </div>
+
+                    <div class="guideline-card">
+                        <h3><span class="num">4</span> Restricted Lethal</h3>
+                        <ul>
+                            <li>Drill Charge in Official <span class="diff-badge added">Added</span></li>
+                            <li>All other lethals (C4, Cluster, Contact, Molotov, Thermite, Trip Mine) <span class="diff-badge changed">Match</span></li>
+                        </ul>
+                    </div>
+
+                    <div class="guideline-card fullwidth-card">
+                        <h3><span class="num">5</span> Restricted Attachments (New in Official 2026)</h3>
+                        <ul>
+                            <li><strong>50 GS:</strong> Lightweight Trigger, Match Grade Trigger <span class="diff-badge added">Added</span></li>
+                            <li><strong>LAG 53:</strong> 13.0" OSW Para Barrel <span class="diff-badge added">Added</span></li>
+                            <li><strong>MG42:</strong> KRAUSNICK 355MM Rapid, 6.5 ARISAKA 125 Round Drums, Recoil Booster <span class="diff-badge added">Added</span></li>
+                            <li><strong>QQ9:</strong> 10MM 30 Round Reload <span class="diff-badge added">Added</span></li>
+                            <li><strong>Tundra:</strong> 26.5" Hammer Forged, 28.2" Tiger Team Barrel <span class="diff-badge added">Added</span></li>
+                            <li><strong>Type 63:</strong> Airborne Elastic Wrap Grip, Firm Grip Tape, 16.4" Rapid Fire, 16.4" Titanium, 18.3" Strike Team <span class="diff-badge added">Added</span></li>
+                            <li><strong>SKS:</strong> Tactical Foregrip A, Granulated Grip Tape <span class="diff-badge added">Added</span></li>
+                        </ul>
+                        <div class="highlight-box">All previously restricted attachments from CSU rules remain restricted in Official 2026. The above are additional restrictions.</div>
+                    </div>
+
+                    <div class="guideline-card">
+                        <h3><span class="num">6</span> Operator Skills</h3>
+                        <ul>
+                            <li>Unique skills rule: same in both <span class="diff-badge changed">Match</span></li>
+                            <li>Official allows switching mid-map (must stay unique) <span class="diff-badge added">Added</span></li>
+                            <li>Official penalty: forfeit the map (not full DQ) <span class="diff-badge changed">Changed</span></li>
+                            <li>Allowed skills list: same 10 in both <span class="diff-badge changed">Match</span></li>
+                        </ul>
+                    </div>
+
+                    <div class="guideline-card">
+                        <h3><span class="num">7</span> Other Differences</h3>
+                        <ul>
+                            <li>Match recording encouraged in Official <span class="diff-badge added">Added</span></li>
+                            <li>Players must ask admin about unsure content in Official <span class="diff-badge added">Added</span></li>
+                            <li>Map pool "Keep 7, Change 6" yearly rotation in Official <span class="diff-badge added">Added</span></li>
+                            <li>Weapon name formatting differences (BP-50 vs BP50, CR AMAX vs CR-56 Amax, Ram7 vs Ram-7) <span class="diff-badge changed">Formatting</span></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Bracket -->
+            <div class="section-header" style="margin-top: calc(var(--space) * 2.5);">
+                <h2>Knockout Stage</h2>
+                <div class="section-line"></div>
+                <span class="format-badge">Double Elimination</span>
+            </div>
+
+            <div class="bracket-wrapper">
+                <div class="bracket-desktop">
+                    <div class="bracket-col">
+                        <div class="col-label">Round 1</div>
+                        <div class="match">
+                            <div class="match-header">Match 1 — Upper Bracket</div>
+                            <div class="match-body">
+                                <div class="team"><span class="team-name">TEAM A</span></div>
+                                <div class="team"><span class="team-name">TEAM B</span></div>
+                            </div>
+                            <div class="match-format">Best of 5 Series</div>
+                        </div>
+                        <div style="height: 20px;"></div>
+                        <div class="match">
+                            <div class="match-header">Match 2 — Upper Bracket</div>
+                            <div class="match-body">
+                                <div class="team"><span class="team-name">TEAM C</span></div>
+                                <div class="team"><span class="team-name">TEAM D</span></div>
+                            </div>
+                            <div class="match-format">Best of 5 Series</div>
+                        </div>
+                        <div style="height: 40px;"></div>
+                        <div class="match">
+                            <div class="match-header red">Match 4 — Lower Bracket</div>
+                            <div class="match-body">
+                                <div class="team loser"><span class="team-name">Loser M1</span><span class="team-label loss">Lose</span></div>
+                                <div class="team loser"><span class="team-name">Loser M2</span><span class="team-label loss">Lose</span></div>
+                            </div>
+                            <div class="match-format">Best of 5 — Elimination</div>
+                        </div>
+                    </div>
+
+                    <div class="bracket-col">
+                        <div class="col-label">Round 2</div>
+                        <div class="match">
+                            <div class="match-header amber">Match 3 — Upper Bracket</div>
+                            <div class="match-body">
+                                <div class="team winner"><span class="team-name">Winner M1</span><span class="team-label win">Win</span></div>
+                                <div class="team winner"><span class="team-name">Winner M2</span><span class="team-label win">Win</span></div>
+                            </div>
+                            <div class="match-format">Best of 5 Series</div>
+                        </div>
+                        <div style="height: 80px;"></div>
+                        <div class="match">
+                            <div class="match-header red">Match 5 — Lower Bracket</div>
+                            <div class="match-body">
+                                <div class="team loser"><span class="team-name">Loser M3</span><span class="team-label loss">Lose</span></div>
+                                <div class="team winner"><span class="team-name">Winner M4</span><span class="team-label win">Win</span></div>
+                            </div>
+                            <div class="match-format">Best of 5 — Elimination</div>
+                        </div>
+                    </div>
+
+                    <div class="bracket-col">
+                        <div class="col-label">Bracket Finals</div>
+                        <div class="match">
+                            <div class="match-header amber">Upper Bracket Final</div>
+                            <div class="match-body">
+                                <div class="team winner"><span class="team-name">Winner M3</span><span class="team-label win">Win</span></div>
+                            </div>
+                            <div class="match-format">Advances to Grand Finals</div>
+                        </div>
+                        <div style="height: 60px;"></div>
+                        <div class="match">
+                            <div class="match-header red">Lower Bracket Final</div>
+                            <div class="match-body">
+                                <div class="team winner"><span class="team-name">Winner M5</span><span class="team-label win">Win</span></div>
+                            </div>
+                            <div class="match-format">Advances to Grand Finals</div>
+                        </div>
+                    </div>
+
+                    <div class="bracket-col">
+                        <div class="col-label">Grand Finals</div>
+                        <div class="match" style="border-color: var(--accent-olive); box-shadow: 0 0 20px rgba(107,142,35,0.15);">
+                            <div class="match-header" style="background: linear-gradient(90deg, var(--accent-olive), transparent); color: var(--accent-olive-bright);">Championship Match</div>
+                            <div class="match-body">
+                                <div class="team winner" style="border-left-color: var(--accent-amber);"><span class="team-name">UB Champion</span></div>
+                                <div class="team winner" style="border-left-color: var(--accent-red);"><span class="team-name">LB Champion</span></div>
+                            </div>
+                            <div class="match-format" style="color: var(--accent-olive-bright); font-weight: 700;">Best of 5 — All 3 Modes</div>
+                        </div>
+                    </div>
+
+                    <div class="championship-col">
+                        <div class="championship-title">Champion</div>
+                        <div class="champion-card">
+                            <div class="trophy">🏆</div>
+                            <div class="champion-label">Tournament Champion</div>
+                            <div class="team-name">TEAM ALPHA</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="bracket-mobile">
+                    <div class="mobile-round">
+                        <div class="mobile-round-label"><span class="round-num">1</span> Upper Bracket — Round 1</div>
+                        <div class="mobile-match-row">
+                            <div class="match">
+                                <div class="match-header">Match 1</div>
+                                <div class="match-body">
+                                    <div class="team"><span class="team-name">TEAM A</span></div>
+                                    <div class="team"><span class="team-name">TEAM B</span></div>
+                                </div>
+                                <div class="match-format">Best of 5 Series</div>
+                            </div>
+                            <div class="mobile-connector"><div class="vline"></div><div class="arrow-down"></div></div>
+                            <div class="match">
+                                <div class="match-header">Match 2</div>
+                                <div class="match-body">
+                                    <div class="team"><span class="team-name">TEAM C</span></div>
+                                    <div class="team"><span class="team-name">TEAM D</span></div>
+                                </div>
+                                <div class="match-format">Best of 5 Series</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="mobile-round">
+                        <div class="mobile-round-label"><span class="round-num">2</span> Upper Bracket — Round 2</div>
+                        <div class="mobile-match-row">
+                            <div class="match">
+                                <div class="match-header amber">Match 3</div>
+                                <div class="match-body">
+                                    <div class="team winner"><span class="team-name">Winner M1</span><span class="team-label win">Win</span></div>
+                                    <div class="team winner"><span class="team-name">Winner M2</span><span class="team-label win">Win</span></div>
+                                </div>
+                                <div class="match-format">Best of 5 Series</div>
+                            </div>
+                            <div class="mobile-connector"><div class="vline"></div><div class="arrow-down"></div></div>
+                            <div style="flex:1;"></div>
+                        </div>
+                    </div>
+
+                    <div class="mobile-round">
+                        <div class="mobile-round-label"><span class="round-num">3</span> Upper Bracket Final</div>
+                        <div class="mobile-match-row">
+                            <div class="match">
+                                <div class="match-header amber">UB Final</div>
+                                <div class="match-body">
+                                    <div class="team winner"><span class="team-name">Winner M3</span><span class="team-label win">Win</span></div>
+                                </div>
+                                <div class="match-format">Advances to Grand Finals</div>
+                            </div>
+                            <div class="mobile-connector"><div class="mobile-connector-label">Grand Finals</div><div class="arrow-right"></div></div>
+                            <div style="flex:1;"></div>
+                        </div>
+                    </div>
+
+                    <div class="mobile-round">
+                        <div class="mobile-round-label" style="color: var(--accent-red); border-color: var(--accent-red-dim);"><span class="round-num" style="background: var(--accent-red);">L1</span> Lower Bracket — Round 1</div>
+                        <div class="mobile-match-row">
+                            <div class="match">
+                                <div class="match-header red">Match 4</div>
+                                <div class="match-body">
+                                    <div class="team loser"><span class="team-name">Loser M1</span><span class="team-label loss">Lose</span></div>
+                                    <div class="team loser"><span class="team-name">Loser M2</span><span class="team-label loss">Lose</span></div>
+                                </div>
+                                <div class="match-format">Best of 5 — Elimination</div>
+                            </div>
+                            <div class="mobile-connector"><div class="vline" style="background: linear-gradient(to bottom, var(--accent-red-dim), transparent);"></div><div class="arrow-down" style="border-top-color: var(--accent-red-dim);"></div></div>
+                            <div style="flex:1;"></div>
+                        </div>
+                    </div>
+
+                    <div class="mobile-round">
+                        <div class="mobile-round-label" style="color: var(--accent-red); border-color: var(--accent-red-dim);"><span class="round-num" style="background: var(--accent-red);">L2</span> Lower Bracket — Round 2</div>
+                        <div class="mobile-match-row">
+                            <div class="match">
+                                <div class="match-header red">Match 5</div>
+                                <div class="match-body">
+                                    <div class="team loser"><span class="team-name">Loser M3</span><span class="team-label loss">Lose</span></div>
+                                    <div class="team winner"><span class="team-name">Winner M4</span><span class="team-label win">Win</span></div>
+                                </div>
+                                <div class="match-format">Best of 5 — Elimination</div>
+                            </div>
+                            <div class="mobile-connector"><div class="vline" style="background: linear-gradient(to bottom, var(--accent-red-dim), transparent);"></div><div class="arrow-down" style="border-top-color: var(--accent-red-dim);"></div></div>
+                            <div style="flex:1;"></div>
+                        </div>
+                    </div>
+
+                    <div class="mobile-round">
+                        <div class="mobile-round-label" style="color: var(--accent-red); border-color: var(--accent-red-dim);"><span class="round-num" style="background: var(--accent-red);">LF</span> Lower Bracket Final</div>
+                        <div class="mobile-match-row">
+                            <div class="match">
+                                <div class="match-header red">LB Final</div>
+                                <div class="match-body">
+                                    <div class="team winner"><span class="team-name">Winner M5</span><span class="team-label win">Win</span></div>
+                                </div>
+                                <div class="match-format">Advances to Grand Finals</div>
+                            </div>
+                            <div class="mobile-connector"><div class="mobile-connector-label" style="color: var(--accent-red);">Grand Finals</div><div class="arrow-right" style="border-left-color: var(--accent-red-dim);"></div></div>
+                            <div style="flex:1;"></div>
+                        </div>
+                    </div>
+
+                    <div class="mobile-round">
+                        <div class="mobile-round-label" style="color: var(--accent-olive-bright); border-color: var(--accent-olive-dim);"><span class="round-num" style="background: var(--accent-olive); color: var(--bg-deep);">GF</span> Grand Finals</div>
+                        <div class="mobile-match-row">
+                            <div class="match" style="border-color: var(--accent-olive); box-shadow: 0 0 20px rgba(107,142,35,0.15);">
+                                <div class="match-header" style="background: linear-gradient(90deg, var(--accent-olive), transparent); color: var(--accent-olive-bright);">Championship Match</div>
+                                <div class="match-body">
+                                    <div class="team winner" style="border-left-color: var(--accent-amber);"><span class="team-name">UB Champion</span></div>
+                                    <div class="team winner" style="border-left-color: var(--accent-red);"><span class="team-name">LB Champion</span></div>
+                                </div>
+                                <div class="match-format" style="color: var(--accent-olive-bright); font-weight: 700;">Best of 5 — All 3 Modes</div>
+                            </div>
+                            <div class="mobile-connector"><div class="mobile-connector-label" style="color: var(--accent-olive-bright);">Champion</div><div class="arrow-right" style="border-left-color: var(--accent-olive-dim);"></div></div>
+                            <div class="champion-card" style="flex: 1; max-width: 160px;">
+                                <div class="trophy"></div>
+                                <div class="champion-label">Champion</div>
+                                <div class="team-name" style="font-size: 1rem;">TEAM ALPHA</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="bracket-labels">
+                    <div class="bracket-label-box upper">
+                        <h3>Upper Bracket</h3>
+                        <p>Teams start here. One loss drops you to the Lower Bracket. All matches are Best-of-5 series.</p>
+                    </div>
+                    <div class="bracket-label-box lower">
+                        <h3>Lower Bracket</h3>
+                        <p>Second chance for first-round losers. A loss here means elimination. All matches are Best-of-5 series.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <p><strong>CSU Lal-lo Campus</strong> — Esports Tournament Hub</p>
+        <p>Mobile Legends: Bang Bang &middot; Call of Duty: Mobile &middot; Registration Deadline: August 21, 2026</p>
+    </footer>
+
+    <script>
+        // ===== TAB SWITCHING =====
+        const tabMLBB = document.getElementById('tab-mlbb');
+        const tabCODM = document.getElementById('tab-codm');
+        const panelMLBB = document.getElementById('mlbb-panel');
+        const panelCODM = document.getElementById('codm-panel');
+
+        function showMLBB() {
+            tabMLBB.classList.add('active');
+            tabMLBB.setAttribute('aria-selected', 'true');
+            tabMLBB.setAttribute('tabindex', '0');
+            panelMLBB.classList.add('active');
+            panelMLBB.hidden = false;
+
+            tabCODM.classList.remove('active');
+            tabCODM.setAttribute('aria-selected', 'false');
+            tabCODM.setAttribute('tabindex', '-1');
+            panelCODM.classList.remove('active');
+            panelCODM.hidden = true;
+        }
+
+        function showCODM() {
+            tabCODM.classList.add('active');
+            tabCODM.setAttribute('aria-selected', 'true');
+            tabCODM.setAttribute('tabindex', '0');
+            panelCODM.classList.add('active');
+            panelCODM.hidden = false;
+
+            tabMLBB.classList.remove('active');
+            tabMLBB.setAttribute('aria-selected', 'false');
+            tabMLBB.setAttribute('tabindex', '-1');
+            panelMLBB.classList.remove('active');
+            panelMLBB.hidden = true;
+        }
+
+        tabMLBB.addEventListener('click', showMLBB);
+        tabCODM.addEventListener('click', showCODM);
+
+        [tabMLBB, tabCODM].forEach(tab => {
+            tab.addEventListener('keydown', (e) => {
+                if (e.key === 'ArrowRight' || e.key === 'ArrowDown') {
+                    e.preventDefault();
+                    if (tab === tabMLBB) { showCODM(); tabCODM.focus(); }
+                    else { showMLBB(); tabMLBB.focus(); }
+                }
+                if (e.key === 'ArrowLeft' || e.key === 'ArrowUp') {
+                    e.preventDefault();
+                    if (tab === tabMLBB) { showCODM(); tabCODM.focus(); }
+                    else { showMLBB(); tabMLBB.focus(); }
+                }
+            });
+        });
+
+        // ===== RULES TOGGLE =====
+        const btnOldRules = document.getElementById('btn-old-rules');
+        const btnNewRules = document.getElementById('btn-new-rules');
+        const btnCompare = document.getElementById('btn-compare');
+        const panelOld = document.getElementById('old-rules-panel');
+        const panelNew = document.getElementById('new-rules-panel');
+        const panelCompare = document.getElementById('compare-panel');
+        const rulesLabel = document.getElementById('rules-label');
+
+        const rulesButtons = [btnOldRules, btnNewRules, btnCompare];
+        const rulesPanels = [panelOld, panelNew, panelCompare];
+        const rulesLabels = {
+            'btn-old-rules': 'CSU Lal-lo Rules (Draft)',
+            'btn-new-rules': 'Official 2026 Esports Rules',
+            'btn-compare': 'Side-by-Side Comparison'
+        };
+
+        function showRulesPanel(btnId) {
+            rulesButtons.forEach(btn => {
+                btn.classList.remove('active');
+                btn.setAttribute('aria-pressed', 'false');
+            });
+            rulesPanels.forEach(panel => panel.classList.remove('active'));
+
+            const activeBtn = document.getElementById(btnId);
+            const targetPanelId = activeBtn.getAttribute('data-panel');
+            const targetPanel = document.getElementById(targetPanelId);
+
+            activeBtn.classList.add('active');
+            activeBtn.setAttribute('aria-pressed', 'true');
+            targetPanel.classList.add('active');
+            rulesLabel.textContent = rulesLabels[btnId];
+        }
+
+        btnOldRules.addEventListener('click', () => showRulesPanel('btn-old-rules'));
+        btnNewRules.addEventListener('click', () => showRulesPanel('btn-new-rules'));
+        btnCompare.addEventListener('click', () => showRulesPanel('btn-compare'));
+
+        // ===== ACCESSIBILITY =====
+        const btnLargeText = document.getElementById('btn-large-text');
+        const btnHighContrast = document.getElementById('btn-high-contrast');
+
+        btnLargeText.addEventListener('click', () => {
+            document.body.classList.toggle('large-text');
+            const isActive = document.body.classList.contains('large-text');
+            btnLargeText.classList.toggle('active', isActive);
+            btnLargeText.setAttribute('aria-pressed', isActive);
+        });
+
+        btnHighContrast.addEventListener('click', () => {
+            document.body.classList.toggle('high-contrast');
+            const isActive = document.body.classList.contains('high-contrast');
+            btnHighContrast.classList.toggle('active', isActive);
+            btnHighContrast.setAttribute('aria-pressed', isActive);
+        });
+
+        if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+            document.querySelectorAll('[style*="animation"], [style*="transition"]').forEach(el => {
+                el.style.animation = 'none';
+            });
+        }
+    </script>
+</body>
+</html>
